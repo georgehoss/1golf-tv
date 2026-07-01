@@ -22,19 +22,34 @@ class SideBarWidget extends StatefulWidget {
 class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 5),
+    return Container(
+      color: const Color(0xFF0B2433),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _sideBarMenuItem(const Icon(Icons.account_circle, color: Colors.white, size: 20), 0),
+          SizedBox(height: 20),
+          _sideBarMenuItem(
+            SvgPicture.asset(
+              ImageIndex.profileIcon,
+              height: 25,
+              width: 25,
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+            0,
+          ),
           _sideBarMenuItem(
             SvgPicture.asset(
               ImageIndex.homeIcon,
               height: 20,
               width: 20,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
             ),
             1,
           ),
@@ -54,7 +69,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         }
       },
       child: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(5),
         child: Column(
           children: [
             icon,

@@ -114,7 +114,8 @@ class _ShowDetailContentState extends State<ShowDetailContent> {
       );
     }
 
-    final videoItems = show.components?.items
+    final videoItems =
+        show.components?.items
             ?.map(
               (item) => ItemsListItem(
                 objectId: item.objectId,
@@ -155,7 +156,7 @@ class _ShowDetailContentState extends State<ShowDetailContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CachedNetworkImage(
-                  imageUrl: show.logo ?? '',
+                  imageUrl: show.thumb ?? '',
                   width: 200,
                   height: 100,
                   fit: BoxFit.contain,

@@ -12,7 +12,7 @@ class ShowDetails {
   String? title;
   String? description;
   String? type;
-  String? logo;
+  String? thumb;
   ShowComponents? components;
 
   ShowDetails({
@@ -20,29 +20,29 @@ class ShowDetails {
     this.title,
     this.description,
     this.type,
-    this.logo,
+    this.thumb,
     this.components,
   });
 
   factory ShowDetails.fromJson(Map<String, dynamic> json) => ShowDetails(
-        id: json['id'],
-        title: json['title'],
-        description: json['description'],
-        type: json['type'],
-        logo: json['logo'],
-        components: json['components'] == null
-            ? null
-            : ShowComponents.fromJson(json['components']),
-      );
+    id: json['id'],
+    title: json['title'],
+    description: json['description'],
+    type: json['type'],
+    thumb: json['thumb'],
+    components: json['components'] == null
+        ? null
+        : ShowComponents.fromJson(json['components']),
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'type': type,
-        'logo': logo,
-        'components': components?.toJson(),
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'type': type,
+    'thumb': thumb,
+    'components': components?.toJson(),
+  };
 }
 
 class ShowComponents {
@@ -93,78 +93,76 @@ class ShowComponents {
   });
 
   factory ShowComponents.fromJson(Map<String, dynamic> json) => ShowComponents(
-        items: json['items'] == null
-            ? []
-            : List<ShowItem>.from(
-                json['items']!.map((x) => ShowItem.fromJson(x)),
-              ),
-        itemslist1: json['itemslist_1'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_1']),
-        itemslist2: json['itemslist_2'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_2']),
-        itemslist3: json['itemslist_3'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_3']),
-        itemslist4: json['itemslist_4'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_4']),
-        itemslist5: json['itemslist_5'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_5']),
-        itemslist6: json['itemslist_6'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_6']),
-        itemslist7: json['itemslist_7'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_7']),
-        itemslist8: json['itemslist_8'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_8']),
-        itemslist9: json['itemslist_9'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_9']),
-        itemslist10: json['itemslist_10'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_10']),
-        itemslist11: json['itemslist_11'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_11']),
-        itemslist12: json['itemslist_12'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_12']),
-        itemslist13: json['itemslist_13'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_13']),
-        itemslist14: json['itemslist_14'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_14']),
-        itemslist15: json['itemslist_15'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_15']),
-        itemslist16: json['itemslist_16'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_16']),
-        itemslist17: json['itemslist_17'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_17']),
-        itemslist18: json['itemslist_18'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_18']),
-        itemslist19: json['itemslist_19'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_19']),
-        itemslist20: json['itemslist_20'] == null
-            ? null
-            : ItemsList.fromJson(json['itemslist_20']),
-      );
+    items: json['items'] == null
+        ? []
+        : List<ShowItem>.from(json['items']!.map((x) => ShowItem.fromJson(x))),
+    itemslist1: json['itemslist_1'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_1']),
+    itemslist2: json['itemslist_2'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_2']),
+    itemslist3: json['itemslist_3'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_3']),
+    itemslist4: json['itemslist_4'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_4']),
+    itemslist5: json['itemslist_5'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_5']),
+    itemslist6: json['itemslist_6'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_6']),
+    itemslist7: json['itemslist_7'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_7']),
+    itemslist8: json['itemslist_8'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_8']),
+    itemslist9: json['itemslist_9'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_9']),
+    itemslist10: json['itemslist_10'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_10']),
+    itemslist11: json['itemslist_11'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_11']),
+    itemslist12: json['itemslist_12'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_12']),
+    itemslist13: json['itemslist_13'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_13']),
+    itemslist14: json['itemslist_14'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_14']),
+    itemslist15: json['itemslist_15'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_15']),
+    itemslist16: json['itemslist_16'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_16']),
+    itemslist17: json['itemslist_17'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_17']),
+    itemslist18: json['itemslist_18'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_18']),
+    itemslist19: json['itemslist_19'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_19']),
+    itemslist20: json['itemslist_20'] == null
+        ? null
+        : ItemsList.fromJson(json['itemslist_20']),
+  );
 
   Map<String, dynamic> toJson() => {
-        'items': items == null
-            ? []
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
-      };
+    'items': items == null
+        ? []
+        : List<dynamic>.from(items!.map((x) => x.toJson())),
+  };
 }
 
 class ShowItem {
@@ -185,20 +183,20 @@ class ShowItem {
   });
 
   factory ShowItem.fromJson(Map<String, dynamic> json) => ShowItem(
-        objectId: json['object_id'],
-        title: json['title'],
-        date: json['date'],
-        image: json['image'],
-        media: json['media'],
-        private: json['private'],
-      );
+    objectId: json['object_id'],
+    title: json['title'],
+    date: json['date'],
+    image: json['image'],
+    media: json['media'],
+    private: json['private'],
+  );
 
   Map<String, dynamic> toJson() => {
-        'object_id': objectId,
-        'title': title,
-        'date': date,
-        'image': image,
-        'media': media,
-        'private': private,
-      };
+    'object_id': objectId,
+    'title': title,
+    'date': date,
+    'image': image,
+    'media': media,
+    'private': private,
+  };
 }

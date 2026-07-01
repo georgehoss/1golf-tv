@@ -9,6 +9,7 @@ class ImageIndex {
   static const backgroundGlass = 'assets/background_glass.png';
   static const backgroundSelected = 'assets/background_selected.png';
   static const homeIcon = 'assets/home_icon.svg';
+  static const profileIcon = 'assets/profile_icon.svg';
   static const liveIcon = 'assets/live_icon.svg';
   static const newsIcon = 'assets/news_icon.svg';
   static const statsIcon = 'assets/stats_icon.svg';

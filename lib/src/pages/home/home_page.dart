@@ -90,31 +90,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             drawer: const MenuDrawer(),
             body: Stack(
               children: [
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(ImageIndex.backgroundHome),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const CardShadow(
-                  startOpacity: 0.0,
-                  endOpacity: 0.6,
-                ),
+                SizedBox(width: double.infinity, height: double.infinity),
+                const CardShadow(startOpacity: 0.0, endOpacity: 0.6),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SideBarWidget(
-                        currentIndex: controller.currentIndex.value,
-                        onFocusChange: () {
-                          _scaffoldKey.currentState!.openDrawer();
-                        },
-                      ),
+                    SideBarWidget(
+                      currentIndex: controller.currentIndex.value,
+                      onFocusChange: () {
+                        _scaffoldKey.currentState!.openDrawer();
+                      },
                     ),
                     _buildContent(),
                   ],
@@ -130,9 +115,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _buildContent() {
     if (controller.isLoading.isTrue && controller.hasHomeComponents.isFalse) {
       return const Expanded(
-        child: Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+        child: Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
 
@@ -165,8 +148,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final widgets = <Widget>[];
     for (var i = 0; i < sections.length; i++) {
       final entryFocus = _focusFor(sections[i].key);
-      final nextFocus =
-          i + 1 < sections.length ? _focusFor(sections[i + 1].key) : null;
+      final nextFocus = i + 1 < sections.length
+          ? _focusFor(sections[i + 1].key)
+          : null;
       final previousFocus = i - 1 >= 0 ? _focusFor(sections[i - 1].key) : null;
       widgets.add(sections[i].builder(entryFocus, nextFocus, previousFocus));
     }
@@ -310,11 +294,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 }
 
-typedef _SectionBuilder = Widget Function(
-  FocusNode entry,
-  FocusNode? next,
-  FocusNode? previous,
-);
+typedef _SectionBuilder =
+    Widget Function(FocusNode entry, FocusNode? next, FocusNode? previous);
 
 class _HomeSection {
   const _HomeSection(this.key, this.builder);

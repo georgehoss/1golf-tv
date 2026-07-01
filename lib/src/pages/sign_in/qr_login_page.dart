@@ -5,7 +5,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../controllers/auth_controller.dart';
 import '../../utils/image_index.dart';
-import '../../widgets/gradiend_border_box.dart';
 
 /// QR login page for the TV app: shows a QR code the user scans with their
 /// phone to authorize the device (see AuthController.startQRLogin).
@@ -45,14 +44,9 @@ class _QRLoginPageState extends State<QRLoginPage> {
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(ImageIndex.backgroundLogin),
-                fit: BoxFit.cover,
-              ),
-            ),
+            decoration: const BoxDecoration(color: Color(0xFF041E42)),
           ),
-          GradientBorderBox(
+          SizedBox(
             width: Get.width * 0.9,
             height: Get.height * 0.9,
             child: Center(child: Obx(() => _buildContent())),
@@ -289,7 +283,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
             child: Text(
               number,
               style: const TextStyle(
-                color: Colors.white,
+                color: Color(0xFF041E42),
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -331,7 +325,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
                   backgroundColor: hasFocus
                       ? const Color(0xFFFBB03B)
                       : Colors.grey[800],
-                  foregroundColor: Colors.white,
+                  foregroundColor: Color(0xFF041E42),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 10,

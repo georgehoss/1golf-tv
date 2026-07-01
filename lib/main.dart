@@ -27,9 +27,10 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         fontFamily: 'Inter',
-        primaryColor: const Color(0xFF000354),
+        primaryColor: const Color(0xFF01274F),
+        scaffoldBackgroundColor: const Color(0xFF01274F),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF000354),
+          primary: Color(0xFF01274F),
           secondary: Color(0xFFFBB03B),
         ),
       ),
