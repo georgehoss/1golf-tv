@@ -1,0 +1,137 @@
+[
+    {
+        "id": 7,
+        "title": "GOLF CENTRAL",
+        "description": "",
+        "type": "program",
+        "logo": "https://static.1golf.tv/wp-content/uploads/2026/05/golfCentral-logo.png",
+        "components": {
+            "itemslist_1": {
+                "title": "\u00daLTIMOS EPISODIOS",
+                "type": "grid",
+                "items": [
+                    {
+                        "object_id": 382,
+                        "size": "",
+                        "title": "Golf Central 29-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79tuo8/playlist.m3u8?key=RaCQNnKXVlYAP-aVsBmtbwcMaQeGbh7l9IHtjbmTOVTJ0ZPcowoPsg&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 373,
+                        "size": "",
+                        "title": "Golf Central 28-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79sfw4/playlist.m3u8?key=M87Znabok3lJ6Tc6i5sGGAQL9hFBjmIWBKmwMsIOG6izVw7nBdaPWQ&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 383,
+                        "size": "",
+                        "title": "Golf Central 27-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79tul6/playlist.m3u8?key=fCeLGPghzUBJxbxLjgqxU14w3dofO5DC3F4wiTKRnFf9-TOgv0OODQ&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 357,
+                        "size": "",
+                        "title": "Golf Central 26-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79qdta/playlist.m3u8?key=1Kyddhu4XrLJc091dBbQWYW4-s0C2Dz8aIdx89wMHP1Imjpu-0Vfhg&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 348,
+                        "size": "",
+                        "title": "Golf Central  25-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79nfl4/playlist.m3u8?key=KBTh75OxW0AckTnpf2TK3n7gEnTshDWIb7z0IPYBj_bi5hRxKhbXjg&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 336,
+                        "size": "",
+                        "title": "Golf Central On Site 24-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79lb3o/playlist.m3u8?key=eAc6ALqNMzwCPJUfPRnGs75L9CpqtptCvkLxHTihuDY6_MKtfHbc_Q&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 322,
+                        "size": "",
+                        "title": "Golf Central On Site 23-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79jioy/playlist.m3u8?key=378kDeguIPEpJMTO4YlYvboV0XKCLaf_cToY3x0pVfc6GzOVvPiAQQ&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 315,
+                        "size": "",
+                        "title": "Golf  Central 23-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79j3bo/playlist.m3u8?key=I8ik8HpPnQB1L1L0FmV-aLhKqb2xIobNdfCkgGmE19jRLjJOF4S-Hg&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 309,
+                        "size": "",
+                        "title": "Golf Central 22-June-2026",
+                        "image": false,
+                        "fullPathEvent": "https://rumble.com/hls-vod/79hrga/playlist.m3u8?key=8WXsmRSzj2qemCuO0rnTDa6pu6x9sUhwWTMEweiA4jOf3YONZE9Q-w&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    },
+                    {
+                        "object_id": 223,
+                        "size": "",
+                        "title": "Golf Central 14-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/golf-central-645x360.png",
+                        "fullPathEvent": "https://rumble.com/hls-vod/794f5q/playlist.m3u8?key=eLfFhaSiFBKCdUV3Oy4Lb9OgmlMHiUyj5OGoZ8B76hV6X-isP2wUvw&u=0&b=0",
+                        "type": "video",
+                        "dateevent": "",
+                        "content": "",
+                        "private": false,
+                        "todetail": "DetailVideo"
+                    }
+                ]
+            }
+        }
+    }
+]

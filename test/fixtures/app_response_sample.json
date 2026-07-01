@@ -1,0 +1,634 @@
+[
+    {
+        "name": "home",
+        "title": "Home",
+        "components": {
+            "channels": {
+                "title": "EN VIVO",
+                "items": [
+                    {
+                        "object_id": 7,
+                        "title": "Golf Channel Latinoam\u00e9rica",
+                        "thummb": "https://static.1golf.tv/wp-content/uploads/2026/05/screenshot.png",
+                        "picture": "https://static.1golf.tv/wp-content/uploads/2026/05/golfCentral-logo.png",
+                        "picturemb": "",
+                        "typeEvent": "live",
+                        "channel": "1golf",
+                        "livestreamID": "k5SeJOAjpF8RRQEYe8s",
+                        "streamEvent": "https://1a-1791.com/live/v13wgnv6/slot-110/bu5d-n4mu/chunklist.m3u8",
+                        "streamTv": "https://www.1golf.tv/player.php?idc=7",
+                        "fullPathEvent": "https://www.1golf.tv/live_dm.php?daylimotion_id=7",
+                        "activate_dm": true,
+                        "private": true
+                    }
+                ]
+            },
+            "leagues": {
+                "title": "TOURS",
+                "items": [
+                    {
+                        "object_id": 6,
+                        "title": "PGA TOUR",
+                        "slug": "pga-tour",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/05/pga-tour-logo.png"
+                    },
+                    {
+                        "object_id": 22,
+                        "title": "PGA TOUR CHAMPIONS",
+                        "slug": "pga-tour-champions",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/PGA_TOUR_Champions_PrimaryLogo_Color_RGB_Reverse.png"
+                    }
+                ]
+            },
+            "calendar": {
+                "events": [
+                    {
+                        "id": "R2026034",
+                        "name": "Travelers Championship",
+                        "logo": "https://res.cloudinary.com/pgatour-prod/image/upload/f_png,q_auto,c_pad,w_300,h_300,b_white,r_max/v1/tournaments/logos/2026/r034.png",
+                        "course": "TPC River Highlands",
+                        "location": "Cromwell, USA",
+                        "date": "25 JUN - 28 JUN",
+                        "status": "schedule"
+                    },
+                    {
+                        "id": "R2026030",
+                        "name": "John Deere Classic",
+                        "logo": "https://res.cloudinary.com/pgatour-prod/image/upload/f_png,q_auto,c_pad,w_300,h_300,b_white,r_max/v1/tournaments/logos/2026/r030.png",
+                        "course": "TPC Deere Run",
+                        "location": "Silvis, USA",
+                        "date": "02 JUL - 05 JUL",
+                        "status": "schedule"
+                    },
+                    {
+                        "id": "R2026518",
+                        "name": "ISCO Championship",
+                        "logo": "https://res.cloudinary.com/pgatour-prod/image/upload/f_png,q_auto,c_pad,w_300,h_300,b_white,r_max/v1/tournaments/logos/2026/r518.png",
+                        "course": "Hurstbourne Country Club",
+                        "location": "Louisville, USA",
+                        "date": "09 JUL - 12 JUL",
+                        "status": "schedule"
+                    },
+                    {
+                        "id": "R2026541",
+                        "name": "Genesis Scottish Open",
+                        "logo": "https://res.cloudinary.com/pgatour-prod/image/upload/f_png,q_auto,c_pad,w_300,h_300,b_white,r_max/v1/tournaments/logos/2026/r541.png",
+                        "course": "The Renaissance Club",
+                        "location": "North Berwick, SCO",
+                        "date": "09 JUL - 12 JUL",
+                        "status": "schedule"
+                    },
+                    {
+                        "id": "R2026522",
+                        "name": "Corales Puntacana Championship",
+                        "logo": "https://res.cloudinary.com/pgatour-prod/image/upload/f_png,q_auto,c_pad,w_300,h_300,b_white,r_max/v1/tournaments/logos/2026/r522.png",
+                        "course": "Puntacana Resort & Club (Corales Golf Course)",
+                        "location": "Punta Cana, DOM",
+                        "date": "16 JUL - 19 JUL",
+                        "status": "schedule"
+                    },
+                    {
+                        "id": "R2026100",
+                        "name": "The Open Championship",
+                        "logo": "https://res.cloudinary.com/pgatour-prod/image/upload/f_png,q_auto,c_pad,w_300,h_300,b_white,r_max/v1/tournaments/logos/2026/r100.png",
+                        "course": "",
+                        "location": "",
+                        "date": "16 JUL - 19 JUL",
+                        "status": "schedule"
+                    }
+                ]
+            },
+            "shows": {
+                "title": "NUESTROS PROGRAMAS",
+                "items": [
+                    {
+                        "object_id": 7,
+                        "title": "GOLF CENTRAL",
+                        "slug": "golf-central",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/05/golfCentral-logo.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/golf-central.png"
+                    },
+                    {
+                        "object_id": 10,
+                        "title": "5 CLUBS WITH GARY WILLIAMS",
+                        "slug": "5-clubs-with-gary-williams",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LOGO_5-CLUBS-WITH-GARY-WILLIAMS.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_5CWGW.png"
+                    },
+                    {
+                        "object_id": 32,
+                        "title": "ASK RORY",
+                        "slug": "ask-rory",
+                        "logo": "",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_ASK_RORY.png"
+                    },
+                    {
+                        "object_id": 11,
+                        "title": "GOLF TODAY",
+                        "slug": "golf-today",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/GOLF-TODAY_blanco.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/GOLF_TODAY_THUMNAIL.jpg"
+                    },
+                    {
+                        "object_id": 18,
+                        "title": "LIVE FROM",
+                        "slug": "live-from",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LIVE_FROM.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/LIVE_FROM_THUMNAIL.jpg"
+                    },
+                    {
+                        "object_id": 14,
+                        "title": "ON THE RANGE",
+                        "slug": "on-the-range",
+                        "logo": "",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_ONTHERANGE.png"
+                    },
+                    {
+                        "object_id": 20,
+                        "title": "SCHOOL OF GOLF",
+                        "slug": "school-of-golf",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/logo_school-of-golf.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB.png"
+                    },
+                    {
+                        "object_id": 19,
+                        "title": "STUDIO GOLF",
+                        "slug": "studio-golf",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LOGO-STUDIO-GOLF.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_STUDIO-GOLF.png"
+                    },
+                    {
+                        "object_id": 16,
+                        "title": "SWING GYM",
+                        "slug": "swing-gym",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/logo_the-swing-gym.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_SGYM.png"
+                    },
+                    {
+                        "object_id": 12,
+                        "title": "THE BIG SWING WITH JIMMY ROBERTS",
+                        "slug": "the-big-swing-with-jimmy-roberts",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/THE_BIG_SWING_WITH_JIMMY_ROBERTS-scaled.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/THE_BIG_SWING_WITH_JIMMY_ROBERTS_TH.png"
+                    },
+                    {
+                        "object_id": 15,
+                        "title": "THE CUT",
+                        "slug": "the-cut",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LOGO_the-cut.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_THE-CUT.png"
+                    },
+                    {
+                        "object_id": 17,
+                        "title": "THE GOLF FIX",
+                        "slug": "the-golf-fix",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/logo_blanco_the-golf-fix.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_GF.png"
+                    },
+                    {
+                        "object_id": 13,
+                        "title": "THE SMYLIE SHOW",
+                        "slug": "the-smylie-show",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/the-smylie-show.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/THE_SMYLIE_SHOW.png"
+                    }
+                ]
+            },
+            "itemslist_2": {
+                "title": "Volver a ver",
+                "type": "videos",
+                "items": [
+                    {
+                        "object_id": 262,
+                        "title": "LPGA Tour test - 18 de junio de 2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_PGA.png",
+                        "media": "https://rumble.com/hls-vod/79b6dy/playlist.m3u8?key=sIzjQOzfRvhKb72Js3fdtCLIB5eSOk-2s42ZIERSFlI80VZy_b_iYQ&u=0&b=0"
+                    }
+                ]
+            }
+        },
+        "user": {
+            "geo": "US"
+        }
+    },
+    {
+        "name": "programas",
+        "title": "Programas",
+        "components": {
+            "shows": {
+                "title": "NUESTROS PROGRAMAS",
+                "items": [
+                    {
+                        "object_id": 7,
+                        "title": "GOLF CENTRAL",
+                        "slug": "golf-central",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/05/golfCentral-logo.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/golf-central.png"
+                    },
+                    {
+                        "object_id": 10,
+                        "title": "5 CLUBS WITH GARY WILLIAMS",
+                        "slug": "5-clubs-with-gary-williams",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LOGO_5-CLUBS-WITH-GARY-WILLIAMS.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_5CWGW.png"
+                    },
+                    {
+                        "object_id": 32,
+                        "title": "ASK RORY",
+                        "slug": "ask-rory",
+                        "logo": "",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_ASK_RORY.png"
+                    },
+                    {
+                        "object_id": 11,
+                        "title": "GOLF TODAY",
+                        "slug": "golf-today",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/GOLF-TODAY_blanco.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/GOLF_TODAY_THUMNAIL.jpg"
+                    },
+                    {
+                        "object_id": 18,
+                        "title": "LIVE FROM",
+                        "slug": "live-from",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LIVE_FROM.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/LIVE_FROM_THUMNAIL.jpg"
+                    },
+                    {
+                        "object_id": 14,
+                        "title": "ON THE RANGE",
+                        "slug": "on-the-range",
+                        "logo": "",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_ONTHERANGE.png"
+                    },
+                    {
+                        "object_id": 20,
+                        "title": "SCHOOL OF GOLF",
+                        "slug": "school-of-golf",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/logo_school-of-golf.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB.png"
+                    },
+                    {
+                        "object_id": 19,
+                        "title": "STUDIO GOLF",
+                        "slug": "studio-golf",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LOGO-STUDIO-GOLF.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_STUDIO-GOLF.png"
+                    },
+                    {
+                        "object_id": 16,
+                        "title": "SWING GYM",
+                        "slug": "swing-gym",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/logo_the-swing-gym.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_SGYM.png"
+                    },
+                    {
+                        "object_id": 12,
+                        "title": "THE BIG SWING WITH JIMMY ROBERTS",
+                        "slug": "the-big-swing-with-jimmy-roberts",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/THE_BIG_SWING_WITH_JIMMY_ROBERTS-scaled.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/THE_BIG_SWING_WITH_JIMMY_ROBERTS_TH.png"
+                    },
+                    {
+                        "object_id": 15,
+                        "title": "THE CUT",
+                        "slug": "the-cut",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/LOGO_the-cut.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_THE-CUT.png"
+                    },
+                    {
+                        "object_id": 17,
+                        "title": "THE GOLF FIX",
+                        "slug": "the-golf-fix",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/logo_blanco_the-golf-fix.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_GF.png"
+                    },
+                    {
+                        "object_id": 13,
+                        "title": "THE SMYLIE SHOW",
+                        "slug": "the-smylie-show",
+                        "logo": "https://static.1golf.tv/wp-content/uploads/2026/06/the-smylie-show.png",
+                        "thumb": "https://static.1golf.tv/wp-content/uploads/2026/06/THE_SMYLIE_SHOW.png"
+                    }
+                ]
+            },
+            "itemslist_2": {
+                "title": "GOLF CENTRAL",
+                "type": "videos",
+                "items": [
+                    {
+                        "object_id": 382,
+                        "title": "Golf Central 29-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79tuo8/playlist.m3u8?key=RaCQNnKXVlYAP-aVsBmtbwcMaQeGbh7l9IHtjbmTOVTJ0ZPcowoPsg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 373,
+                        "title": "Golf Central 28-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79sfw4/playlist.m3u8?key=M87Znabok3lJ6Tc6i5sGGAQL9hFBjmIWBKmwMsIOG6izVw7nBdaPWQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 383,
+                        "title": "Golf Central 27-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79tul6/playlist.m3u8?key=fCeLGPghzUBJxbxLjgqxU14w3dofO5DC3F4wiTKRnFf9-TOgv0OODQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 357,
+                        "title": "Golf Central 26-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79qdta/playlist.m3u8?key=1Kyddhu4XrLJc091dBbQWYW4-s0C2Dz8aIdx89wMHP1Imjpu-0Vfhg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 348,
+                        "title": "Golf Central  25-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79nfl4/playlist.m3u8?key=KBTh75OxW0AckTnpf2TK3n7gEnTshDWIb7z0IPYBj_bi5hRxKhbXjg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 336,
+                        "title": "Golf Central On Site 24-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79lb3o/playlist.m3u8?key=eAc6ALqNMzwCPJUfPRnGs75L9CpqtptCvkLxHTihuDY6_MKtfHbc_Q&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 322,
+                        "title": "Golf Central On Site 23-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79jioy/playlist.m3u8?key=378kDeguIPEpJMTO4YlYvboV0XKCLaf_cToY3x0pVfc6GzOVvPiAQQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 315,
+                        "title": "Golf  Central 23-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79j3bo/playlist.m3u8?key=I8ik8HpPnQB1L1L0FmV-aLhKqb2xIobNdfCkgGmE19jRLjJOF4S-Hg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 309,
+                        "title": "Golf Central 22-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79hrga/playlist.m3u8?key=8WXsmRSzj2qemCuO0rnTDa6pu6x9sUhwWTMEweiA4jOf3YONZE9Q-w&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 223,
+                        "title": "Golf Central 14-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/golf-central-645x360.png",
+                        "media": "https://rumble.com/hls-vod/794f5q/playlist.m3u8?key=eLfFhaSiFBKCdUV3Oy4Lb9OgmlMHiUyj5OGoZ8B76hV6X-isP2wUvw&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 216,
+                        "title": "Golf Central 13-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/golf-central-645x360.png",
+                        "media": "https://rumble.com/hls-vod/792ngi/playlist.m3u8?key=U6TbXLB-mCVYlMbt0KIMi67mKcIzor1hnCfY8HbVOj_ahCEiO4_R3w&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 211,
+                        "title": "Golf Central 12-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/golf-central-645x360.png",
+                        "media": "https://rumble.com/hls-vod/790zfe/playlist.m3u8?key=k5HdiZWvpnjoj5_6DtdIql60v16LLW96xIcKYL7PEdzU-X6StQc-tQ&u=0&b=0",
+                        "private": false
+                    }
+                ]
+            },
+            "itemslist_3": {
+                "title": "5 CLUBS WITH GARY WILLIAMS",
+                "type": "videos",
+                "items": [
+                    {
+                        "object_id": 387,
+                        "title": "5 clubs With Gary Williams 30-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79v038/playlist.m3u8?key=NbYQ5LqzViy4aRycIbk_RVDHaiL9jyBLhlkFdCd2k7sMwEGBDrAp3w&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 376,
+                        "title": "5 Clubs With Gary Williams 29-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79t6pm/playlist.m3u8?key=9uBeI3XwLjI5tStlZXtDjcYTlsxqqY5hXmvB8pETVi-N1x_EhBS8QQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 325,
+                        "title": "5 Clubs With Gary Williams 24-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79ks2i/playlist.m3u8?key=_sNdblLsGNhd7DkFLmKhR1Mi4pEIK-vGkbDP-cW5Ivi2kOnMwBirSQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 313,
+                        "title": "5 Clubs With Gary Williams 23-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79iub0/playlist.m3u8?key=SX80u0EP95i2f9tqpbBv3s4pdg87WwUytcny30gdD1-vG9ky0mXmTQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 303,
+                        "title": "5 Clubs With Gary Williams 22-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79h1ay/playlist.m3u8?key=X65AoxPol1P0g7AwjgZtdnCeY5XjDci61V-0MlfkV4ewDeklz7ThfQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 226,
+                        "title": "5 Clubs With Gary Williams 15-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/795kxu/playlist.m3u8?key=uf2EVuxk4HkFqOsBhF49KlFfhF3xiJjZOn649e_h7Wk9afEt1gJ2xg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 184,
+                        "title": "5 Clubs With Gary Williams 10-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/Diseno-sin-titulo-645x360.png",
+                        "media": "https://rumble.com/hls-vod/78yob4/playlist.m3u8?key=wPGVd37yRe1zMBBm07ztsaDZSkaxdPvV3MdHBvkq9TsdMWPnECxbFw&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 89,
+                        "title": "5 Clubs With Gary Williams 09-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/Diseno-sin-titulo-645x360.jpg",
+                        "media": "https://rumble.com/hls-vod/78v02i/playlist.m3u8?key=9T8ALQAMI7xq2arE3vpEi51jKgbArV5g-xsdWttZ0gny08imgBX9KA&u=0&b=0",
+                        "private": false
+                    }
+                ]
+            },
+            "itemslist_4": {
+                "title": "GOLF TODAY",
+                "type": "videos",
+                "items": [
+                    {
+                        "object_id": 380,
+                        "title": "Golf Today 29-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79taa8/playlist.m3u8?key=dg9JDa4W3Nz6ku6QeH2gbcpQKST5vVIVMxJ-Ec1ot1LiXA2NQFzA_A&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 305,
+                        "title": "Golf Today 22-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79hhtq/playlist.m3u8?key=GwkMkoevJkg8N9y1ZBkKef9sQ4mWVOAonupLDk0uMCWMnJs3KdqEHw&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 177,
+                        "title": "Golf Today 10-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/78wwsu/playlist.m3u8?u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 79,
+                        "title": "Golf Today 09-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/78uyhu/playlist.m3u8?key=Rd2ZLYvR_nC3sqXAoOYpK1fF_mBTm4SE2uaEWdKhokxW2DMAGQ26Fw&u=0&b=0",
+                        "private": false
+                    }
+                ]
+            },
+            "itemslist_5": {
+                "title": "LIVE FROM",
+                "type": "videos",
+                "items": [
+                    {
+                        "object_id": 301,
+                        "title": "Live From The US Open 21-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79gddk/playlist.m3u8?key=DYFBNsiscx50PqaNWBxumR5jByIY1Yxni6DVUbgD2It_GSwzBdQBkw&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 294,
+                        "title": "Live From The US Open 062026 20-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79esm4/playlist.m3u8?key=jFMMs0R7JZ1st8QJadsjyeMvAAh7KHdPRrgMmopa2GwCRoM2FGFocQ&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 290,
+                        "title": "Live From The US Open 19-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79d8n0/playlist.m3u8?key=YEIk9t4HVo018LTnFvRtFGZnDQDScmt7h5JGtHvAhRSDJLhQAJNpxg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 288,
+                        "title": "Live From The US Open 26504 20-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/79dywg/playlist.m3u8?key=5rrwzmV87JdMpx0R2rGl0JZQOWkZLd0bZx5JLS9nhX_7zC18kMlGwA&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 282,
+                        "title": "Live From The US Open 18-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/Diseno-sin-titulo-2-645x360.png",
+                        "media": "https://rumble.com/hls-vod/79bj7u/playlist.m3u8?key=z02Ep5k6Y-14zDJp1PIZr83Thzc0ttWjjvUgTho97EGt_lrV1glxvg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 245,
+                        "title": "Live From The US Open 26503 17-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/Diseno-sin-titulo-2-645x360.png",
+                        "media": "https://rumble.com/hls-vod/799whk/playlist.m3u8?key=F2IDufbxniW2RzmUiwBn7km4byqdmYHxS3x3qteHxEQy76EyyhZjtg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 243,
+                        "title": "Live From The US Open 17-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/799og4/playlist.m3u8?key=ktbhD9L8QnXTmNNcuDLbCXYBm_sdz5dKAcFSyoaTVxOlFfgDNRX08Q&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 240,
+                        "title": "Live From The US Open 16-June-2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/Diseno-sin-titulo-1-645x360.png",
+                        "media": "https://rumble.com/hls-vod/793cu4/playlist.m3u8?key=BSO1DqC2Hyj3c_0YsQ0eL4syr1rYuPxQq_64ea3UT0nvVhlTQpKkQw",
+                        "private": false
+                    },
+                    {
+                        "object_id": 238,
+                        "title": "Live From The US Open 26502",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/797kwo/playlist.m3u8?key=p4dk8WUuTTbI-nU2SlQ526JggrKiHnrape0-QcNStOJplBlgxLfOWg&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 229,
+                        "title": "Live From The US Open 15-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/7962yq/playlist.m3u8?key=q-BofO3rVsOUgUnX3NkP7IPKLF7YL8cgkhbZTb8H0kS52oJvvWD4Cw&u=0&b=0",
+                        "private": false
+                    },
+                    {
+                        "object_id": 225,
+                        "title": "Live From The US Open 26501",
+                        "image": "",
+                        "media": "https://rumble.com/hls-vod/795rcu/playlist.m3u8?key=-abnQGbZF9k9fK8WHsvNqnu2ee38VighosrzK2w5V6RCT6FGDuGW5g&u=0&b=0",
+                        "private": false
+                    }
+                ]
+            },
+            "itemslist_6": {
+                "title": "ON THE RANGE",
+                "type": "videos",
+                "items": [
+                    {
+                        "object_id": 332,
+                        "title": "On The Range  Travelers Championship 24-June-2026",
+                        "image": "",
+                        "media": "https://rumble.com/live-hls-dvr/79kl32/playlist.m3u8?key=wDwN7v4A7WrBmLMuPSbmP3303NYNuHC9oJOGj3a5QzqiNOIPZbntaQ",
+                        "private": false
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "estadisticas",
+        "title": "Estadisticas",
+        "components": {
+            "webview_3": {
+                "url": "https://www.1golf.tv/estadisticas"
+            }
+        }
+    },
+    {
+        "name": "contacto",
+        "title": "Contacto",
+        "components": {
+            "link": {
+                "url": "https://www.1golf.tv/contacto"
+            }
+        }
+    },
+    {
+        "name": "live",
+        "title": "live",
+        "components": {
+            "itemslist_2": {
+                "title": "Volver a ver",
+                "type": "grid",
+                "items": [
+                    {
+                        "object_id": 262,
+                        "title": "LPGA Tour test - 18 de junio de 2026",
+                        "image": "https://static.1golf.tv/wp-content/uploads/2026/06/1_THUMB_PGA.png",
+                        "media": "https://rumble.com/hls-vod/79b6dy/playlist.m3u8?key=sIzjQOzfRvhKb72Js3fdtCLIB5eSOk-2s42ZIERSFlI80VZy_b_iYQ&u=0&b=0"
+                    }
+                ]
+            }
+        }
+    }
+]
