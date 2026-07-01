@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'src/controllers/auth_controller.dart';
 import 'src/pages/home/home_page.dart';
 import 'src/pages/sign_in/qr_login_page.dart';
+import 'src/utils/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await UserPreferences().initPreferences();
 
   final authController = Get.put(AuthController());
   await authController.restoreSession();

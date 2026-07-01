@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/main_controller.dart';
 import '../../models/items_list.dart';
+import '../../pages/player/player_page.dart' as player;
 import '../../utils/image_index.dart';
 
 /// Unified horizontal item list (shows, itemslist_N, league/show video
@@ -199,15 +200,19 @@ class _ItemCardState extends State<ItemCard> {
         ),
         ActivateIntent: CallbackAction(
           onInvoke: (intent) {
-            // El reproductor real se integra en Fase 1 · Etapa 5.
-            Get.snackbar(
-              widget.item.title ?? 'Video',
-              'El reproductor estará disponible próximamente',
-              backgroundColor: Colors.grey[900],
-              colorText: Colors.white,
-              snackPosition: SnackPosition.BOTTOM,
-              duration: const Duration(seconds: 2),
-            );
+            final url = widget.item.media ?? widget.item.fullPathEvent;
+            if (url == null || url.isEmpty) {
+              Get.snackbar(
+                widget.item.title ?? 'Video',
+                'Este video no está disponible',
+                backgroundColor: Colors.grey[900],
+                colorText: Colors.white,
+                snackPosition: SnackPosition.BOTTOM,
+                duration: const Duration(seconds: 2),
+              );
+              return null;
+            }
+            Get.to(() => player.VideoPlayer(item: widget.item));
             return null;
           },
         ),

@@ -5,6 +5,7 @@ import '../models/app_response.dart';
 import '../models/home_components.dart';
 import '../models/league_details.dart';
 import '../models/show_details.dart';
+import '../providers/dailymotion_provider.dart';
 import '../providers/golf_provider.dart';
 import 'auth_controller.dart';
 
@@ -55,6 +56,26 @@ class MainController extends GetxController {
     if (items != null && items.isNotEmpty) {
       selectedChannel.value = items.first;
     }
+  }
+
+  /// Resolves the playable HLS URL for a live channel: channels with
+  /// Dailymotion enabled (`activateDm`) go through [DailyMotionProvider] to
+  /// turn their `livestreamId` into a `stream_live_hls_url`; the rest play
+  /// their `streamEvent` directly. Mirrors `one_golf_app`'s
+  /// `channel_player_widget` resolution logic. `streamTv` is returned as the
+  /// fallback (`url2`) for the player in both cases.
+  Future<(String url, String? url2)> resolveChannelUrl(
+    OBChannel channel,
+  ) async {
+    final livestreamId = channel.livestreamId ?? '';
+    if (channel.activateDm == true && livestreamId.isNotEmpty) {
+      final response = await DailyMotionProvider().getUrlVideo(livestreamId);
+      final dmUrl = response['stream_live_hls_url'];
+      if (dmUrl is String && dmUrl.isNotEmpty) {
+        return (dmUrl, channel.streamTv);
+      }
+    }
+    return (channel.streamEvent ?? '', channel.streamTv);
   }
 
   // ─── Home data ─────────────────────────────────────────────────────────

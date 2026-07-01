@@ -62,15 +62,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Próximos torneos',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              color: Color(0xFFFBB03B),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
+          // Sin título de sección (por diseño).
           SizedBox(
             height: 94,
             child: FocusTraversalGroup(

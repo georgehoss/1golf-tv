@@ -28,12 +28,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  # TODO(reproductor): bitmovin_player fija compileSdkVersion 34 en su propio módulo
-  # Android, pero el SDK nativo de Bitmovin resuelto hoy desde Artifactory ya exige
-  # compileSdk 35+ (falla ':bitmovin_player:checkDebugAarMetadata' incluso sin usarlo
-  # desde Dart). Reactivar en la Etapa 5 fijando una versión nativa compatible o cuando
-  # el plugin suba su compileSdk. Ver plans/fase-1-05-reproductor.md.
-  # bitmovin_player: ^0.20.0
+  # bitmovin_player fija compileSdkVersion 34 en su propio módulo Android, pero el SDK
+  # nativo actual exige compileSdk 35+. Se resuelve con un override en
+  # android/build.gradle.kts que fuerza el compileSdk del subproyecto a 35.
+  bitmovin_player: ^0.20.0
   cached_network_image: ^3.4.1
   carousel_slider: ^5.1.1
   cupertino_icons: ^1.0.8

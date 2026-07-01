@@ -7,6 +7,7 @@ import '../../controllers/main_controller.dart';
 import '../../models/home_components.dart';
 import '../../models/items_list.dart';
 import '../../pages/leagues/league_detail_page.dart';
+import '../../pages/live/live_preview_page.dart';
 import '../../utils/image_index.dart';
 import 'card_shadow.dart';
 
@@ -69,17 +70,7 @@ class _ChannelsLiveWidgetState extends State<ChannelsLiveWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.channels.title != null &&
-              widget.channels.title!.isNotEmpty)
-            Text(
-              widget.channels.title!,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                color: Color(0xFFFBB03B),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          const SizedBox(height: 10),
+          // Sin título de sección: el badge "EN VIVO" por tarjeta ya lo comunica.
           SizedBox(
             height: 325,
             child: FocusTraversalGroup(
@@ -228,6 +219,7 @@ class _ChannelLiveCardState extends State<ChannelLiveCard> {
         ActivateIntent: CallbackAction(
           onInvoke: (intent) {
             controller.selectChannel(widget.channel);
+            _playChannel(context, widget.channel);
             return null;
           },
         ),
@@ -331,6 +323,24 @@ class _ChannelLiveCardState extends State<ChannelLiveCard> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _playChannel(BuildContext context, OBChannel channel) async {
+    final controller = Get.find<MainController>();
+    final (url, url2) = await controller.resolveChannelUrl(channel);
+    if (url.isEmpty) {
+      Get.snackbar(
+        channel.title ?? 'Canal',
+        'Este canal no está disponible en este momento',
+        backgroundColor: Colors.grey[900],
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+    Get.to(
+      () => LivePreviewPage(url: url, url2: url2, title: channel.title ?? ''),
     );
   }
 }

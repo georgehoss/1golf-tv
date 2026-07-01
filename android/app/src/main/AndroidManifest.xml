@@ -41,8 +41,8 @@
                 android:name="io.flutter.embedding.android.TransparencyMode"
                 android:value="opaque" />
         </activity>
-        <!-- TODO(prod): sustituir por la licencia de Bitmovin de golf cuando esté disponible. -->
-        <meta-data android:name="BITMOVIN_PLAYER_LICENSE_KEY" android:value="TODO_GOLF_BITMOVIN_KEY" />
+        <!-- Misma licencia de Bitmovin que usan la app móvil de golf y la de béisbol. -->
+        <meta-data android:name="BITMOVIN_PLAYER_LICENSE_KEY" android:value="3a21fd77-dd98-4146-8751-8d1858bfa033" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
