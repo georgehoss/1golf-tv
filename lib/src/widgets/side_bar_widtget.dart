@@ -23,6 +23,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       color: const Color(0xFF0B2433),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

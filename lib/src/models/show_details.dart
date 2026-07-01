@@ -29,7 +29,9 @@ class ShowDetails {
     title: json['title'],
     description: json['description'],
     type: json['type'],
-    thumb: json['thumb'],
+    // La API real devuelve el logo del show en "logo", no "thumb" (verificado
+    // en GET /show/{id}); se acepta "thumb" también por si cambia.
+    thumb: json['thumb'] ?? json['logo'],
     components: json['components'] == null
         ? null
         : ShowComponents.fromJson(json['components']),

@@ -49,7 +49,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
           return FocusableActionDetector(
             descendantsAreFocusable: true,
             child: Drawer(
-              backgroundColor: const Color(0xFF000354),
+              backgroundColor: const Color(0xFF0B2433),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView(
@@ -59,10 +59,14 @@ class _MenuDrawerState extends State<MenuDrawer> {
                       nodes: focusNodes,
                       focusNode: focusNodes[0],
                       index: 0,
-                      icon: const Icon(
-                        Icons.account_circle,
-                        color: Colors.white,
-                        size: 20,
+                      icon: SvgPicture.asset(
+                        ImageIndex.profileIcon,
+                        height: 20,
+                        width: 20,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       title: authController.isAuthenticated.value
                           ? 'Cerrar sesión'
@@ -175,7 +179,9 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget> {
               border: Border(
                 bottom: BorderSide(
                   width: 2,
-                  color: isSelected ? const Color(0xFFFBB03B) : Colors.transparent,
+                  color: isSelected
+                      ? const Color(0xFFFBB03B)
+                      : Colors.transparent,
                 ),
               ),
             ),
@@ -183,7 +189,8 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget> {
               children: [
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: widget.icon ??
+                  child:
+                      widget.icon ??
                       Image.asset(ImageIndex.logo, height: 20, width: 20),
                 ),
                 Expanded(

@@ -11,7 +11,6 @@ import '../../widgets/side_bar_widtget.dart';
 import '../../widgets/home/card_shadow.dart';
 import '../../widgets/home/channels_live_widget.dart';
 import '../../widgets/home/home_calendar_widget.dart';
-import '../../widgets/home/leagues_home_widget.dart';
 import '../../widgets/home/show_list_widget.dart';
 import '../../widgets/common/item_list_widget.dart';
 
@@ -182,12 +181,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   List<_HomeSection> _buildSections(HomeComponents home) {
     final sections = <_HomeSection>[];
 
-    if (home.channels?.items?.isNotEmpty ?? false) {
+    final hasChannels = home.channels?.items?.isNotEmpty ?? false;
+    final hasLeagues = home.leagues?.items?.isNotEmpty ?? false;
+    if (hasChannels || hasLeagues) {
       sections.add(
         _HomeSection(
           'channels',
           (entry, next, previous) => ChannelsLiveWidget(
-            channels: home.channels!,
+            channels: home.channels ?? OBChannels(items: []),
+            leagues: home.leagues,
             entryFocus: entry,
             nextFocus: next,
             previousFocus: previous,
@@ -202,20 +204,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           'calendar',
           (entry, next, previous) => HomeCalendar(
             calendar: home.calendar!,
-            entryFocus: entry,
-            nextFocus: next,
-            previousFocus: previous,
-          ),
-        ),
-      );
-    }
-
-    if (home.leagues?.items?.isNotEmpty ?? false) {
-      sections.add(
-        _HomeSection(
-          'leagues',
-          (entry, next, previous) => LeaguesHomeWidget(
-            leagues: home.leagues!,
             entryFocus: entry,
             nextFocus: next,
             previousFocus: previous,
