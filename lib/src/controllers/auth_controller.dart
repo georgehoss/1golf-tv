@@ -26,6 +26,8 @@ class AuthController extends GetxController {
   Timer? _pollingTimer;
   Timer? _countdownTimer;
 
+  DateTime? _lastValidationTime;
+
   @override
   void onInit() {
     super.onInit();
@@ -239,11 +241,26 @@ class AuthController extends GetxController {
     if (token == null) return false;
 
     final isValid = await _apiService.validateToken(token: token.token);
+    _lastValidationTime = DateTime.now();
     if (!isValid) {
       await _refreshAccessToken();
       return tokenResponse.value != null;
     }
     return true;
+  }
+
+  /// Re-validate the session with the server if more than 5 minutes have
+  /// passed since the last check (called when the app resumes from
+  /// background, not on every frame).
+  Future<void> validateSessionIfNeeded() async {
+    if (!isAuthenticated.value) return;
+
+    if (_lastValidationTime != null &&
+        DateTime.now().difference(_lastValidationTime!).inMinutes < 5) {
+      return;
+    }
+
+    await _validateCurrentSession();
   }
 
   void _startTokenRefreshTimer() {

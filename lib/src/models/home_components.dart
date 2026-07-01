@@ -1,6 +1,28 @@
 import 'calendar_components.dart';
 import 'items_list.dart';
 
+/// Lightweight reference to a tappable item (league, show, video) used to
+/// carry the minimal data needed to navigate to its detail page.
+class VideoItem {
+  int? objectId;
+  String? title;
+  String? image;
+  String? media;
+  String? slug;
+  String? logo;
+  bool? private;
+
+  VideoItem({
+    this.objectId,
+    this.title,
+    this.image,
+    this.media,
+    this.slug,
+    this.logo,
+    this.private,
+  });
+}
+
 /// Components of the `home` screen returned by `GET /app`.
 class HomeComponents {
   OBChannels? channels;

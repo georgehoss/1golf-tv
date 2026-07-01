@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         fontFamily: 'Inter',
-        primaryColor: const Color(0xFF0B3B24),
+        primaryColor: const Color(0xFF000354),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF0B3B24),
-          secondary: Color(0xFF6CBE45),
+          primary: Color(0xFF000354),
+          secondary: Color(0xFFFBB03B),
         ),
       ),
       getPages: [

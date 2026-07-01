@@ -239,11 +239,11 @@ class _QRLoginPageState extends State<QRLoginPage> {
                       backgroundColor: Colors.white,
                       eyeStyle: const QrEyeStyle(
                         eyeShape: QrEyeShape.square,
-                        color: Color(0xFF0B3B24),
+                        color: Color(0xFF000354),
                       ),
                       dataModuleStyle: const QrDataModuleStyle(
                         dataModuleShape: QrDataModuleShape.square,
-                        color: Color(0xFF0B3B24),
+                        color: Color(0xFF000354),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -253,7 +253,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0B3B24),
+                        color: const Color(0xFF000354),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Text(
@@ -282,7 +282,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
           width: 30,
           height: 30,
           decoration: BoxDecoration(
-            color: const Color(0xFF6CBE45),
+            color: const Color(0xFFFBB03B),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Center(
@@ -329,7 +329,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
                 label: const Text('Generar nuevo código'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: hasFocus
-                      ? const Color(0xFF6CBE45)
+                      ? const Color(0xFFFBB03B)
                       : Colors.grey[800],
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
