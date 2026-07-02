@@ -44,6 +44,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   FocusNode _focusFor(String key) =>
       _sectionFocus.putIfAbsent(key, () => FocusNode());
 
+  /// Entry focus node of the nearest focusable section in [dir] (+1 down,
+  /// -1 up) from index [from], skipping decorative sections. Returns null if
+  /// there is no focusable section that way.
+  FocusNode? _neighborFocus(List<_HomeSection> sections, int from, int dir) {
+    for (var j = from + dir; j >= 0 && j < sections.length; j += dir) {
+      if (sections[j].focusable) return _focusFor(sections[j].key);
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -151,19 +161,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final widgets = <Widget>[];
     for (var i = 0; i < sections.length; i++) {
       final entryFocus = _focusFor(sections[i].key);
-      final nextFocus = i + 1 < sections.length
-          ? _focusFor(sections[i + 1].key)
-          : null;
-      final previousFocus = i - 1 >= 0 ? _focusFor(sections[i - 1].key) : null;
+      // Up/Down chains between focusable sections only, skipping decorative
+      // ones (the divider) so focus never lands on a dead node.
+      final nextFocus = _neighborFocus(sections, i, 1);
+      final previousFocus = _neighborFocus(sections, i, -1);
       widgets.add(sections[i].builder(entryFocus, nextFocus, previousFocus));
     }
 
-    if (!_initialFocusRequested && sections.isNotEmpty) {
-      _initialFocusRequested = true;
-      final firstFocus = _focusFor(sections.first.key);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        firstFocus.requestFocus();
-      });
+    if (!_initialFocusRequested) {
+      final firstFocusable = sections
+          .where((s) => s.focusable)
+          .map((s) => s.key)
+          .firstOrNull;
+      if (firstFocusable != null) {
+        _initialFocusRequested = true;
+        final firstFocus = _focusFor(firstFocusable);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          firstFocus.requestFocus();
+        });
+      }
     }
 
     return Expanded(
@@ -219,10 +235,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     sections.add(
       _HomeSection(
         'divider',
-        (entry, next, previous) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const Divider(color: Colors.white, thickness: 1.0),
+        (entry, next, previous) => const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Divider(color: Colors.white, thickness: 1.0),
         ),
+        focusable: false,
       ),
     );
 
@@ -300,7 +317,12 @@ typedef _SectionBuilder =
     Widget Function(FocusNode entry, FocusNode? next, FocusNode? previous);
 
 class _HomeSection {
-  const _HomeSection(this.key, this.builder);
+  const _HomeSection(this.key, this.builder, {this.focusable = true});
   final String key;
   final _SectionBuilder builder;
+
+  /// Decorative sections (e.g. the divider) render in the vertical order but
+  /// are NOT part of the D-pad focus chain — Up/Down must skip over them,
+  /// otherwise focus lands on a node nothing listens to and gets lost.
+  final bool focusable;
 }
