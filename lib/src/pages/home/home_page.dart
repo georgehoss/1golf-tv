@@ -216,6 +216,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       );
     }
 
+    sections.add(
+      _HomeSection(
+        'divider',
+        (entry, next, previous) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: const Divider(color: Colors.white, thickness: 1.0),
+        ),
+      ),
+    );
+
     if (home.shows?.items?.isNotEmpty ?? false) {
       sections.add(
         _HomeSection(
