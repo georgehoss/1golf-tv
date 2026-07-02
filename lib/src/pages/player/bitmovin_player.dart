@@ -8,11 +8,19 @@ import 'package:logger/logger.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../utils/image_index.dart';
+import 'bitmovin_config.dart';
 
 /// Native Bitmovin playback for devices with Android SDK ≥ [AdaptivePlayer.cutoffSdk].
 /// Ported from `one_baseball_android_tv` — key, analytics key and D-pad/media-key
 /// handling (including accelerated scrubbing) preserved verbatim; only the DRM
 /// `x-app-bundle`, font and accent color were adapted to golf branding.
+///
+/// When [externalPlayer] is provided (home inline→full-screen handoff), this
+/// widget attaches to that already-playing shared [Player] instead of creating
+/// and loading its own: it does NOT create, load, play or dispose the player —
+/// it only drives the on-screen controls and, on teardown, calls
+/// [onExternalRelease] so the owner (`LivePlaybackController`) can re-bind its
+/// listeners and resume inline playback.
 class BitmovinPlayer extends StatefulWidget {
   const BitmovinPlayer({
     super.key,
@@ -20,12 +28,21 @@ class BitmovinPlayer extends StatefulWidget {
     required this.isHLS,
     this.url2,
     required this.title,
+    this.externalPlayer,
+    this.onExternalRelease,
   });
 
   final String title;
   final String url;
   final bool isHLS;
   final String? url2;
+
+  /// Shared, already-playing player to attach to instead of creating one.
+  final Player? externalPlayer;
+
+  /// Called from [dispose] when [externalPlayer] is set, so the owner can
+  /// reclaim the player (re-bind listeners, hand playback back to the tile).
+  final VoidCallback? onExternalRelease;
 
   @override
   State<BitmovinPlayer> createState() => _BitmovinPlayerState();
@@ -53,12 +70,8 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
   DateTime? _scrubStart;
   int _scrubDir = 0; // -1 | 1
   final FocusNode _focusNode = FocusNode(debugLabel: 'bitmovin_player_focus');
-  final drmConfig = const DrmConfig(
-    fairplay: FairplayConfig(
-      licenseRequestHeaders: {'x-app-bundle': 'tv.onegolf.tv'},
-    ),
-    widevine: WidevineConfig(httpHeaders: {'x-app-bundle': 'tv.onegolf.tv'}),
-  );
+  final drmConfig = golfDrmConfig;
+  bool get _isExternal => widget.externalPlayer != null;
 
   @override
   void initState() {
@@ -261,38 +274,25 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
   }
 
   void _initializePlayer() async {
-    _player = Player(
-      config: const PlayerConfig(
-        key: '3a21fd77-dd98-4146-8751-8d1858bfa033',
-        analyticsConfig: AnalyticsConfig(
-          licenseKey: 'f2ae6442-705f-4531-ada7-b68e129a4eed',
-        ),
-        styleConfig: StyleConfig(isUiEnabled: false),
-        remoteControlConfig: RemoteControlConfig(
-          isCastEnabled: false,
-          isAirPlayEnabled: false,
-          sendManifestRequestsWithCredentials: true,
-        ),
+    // Handoff mode: attach to the shared player that is already loaded and
+    // playing. Take over the (single-slot) event handlers for our controls,
+    // but don't create/load/play — that would rebuffer the stream.
+    if (_isExternal) {
+      _player = widget.externalPlayer!;
+      _listen();
+      return;
+    }
+
+    _player = Player(config: buildGolfPlayerConfig());
+
+    _listen();
+    _player.loadSourceConfig(
+      buildGolfSourceConfig(
+        url: widget.url,
+        title: widget.title,
+        isHLS: widget.isHLS,
       ),
     );
-
-    final sourceConfig = widget.isHLS
-        ? SourceConfig(
-            url: widget.url,
-            type: SourceType.hls,
-            title: widget.title,
-            drmConfig: drmConfig,
-          )
-        : SourceConfig(
-            url: widget.url,
-            drmConfig: drmConfig,
-            type: widget.url.contains('m3u8')
-                ? SourceType.hls
-                : SourceType.progressive,
-            title: '',
-          );
-    _listen();
-    _player.loadSourceConfig(sourceConfig);
     _player.play();
     Future.delayed(const Duration(seconds: 5), () async {
       if (mounted) {
@@ -309,8 +309,14 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
     _controlsHideTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     HardwareKeyboard.instance.removeHandler(_onGlobalKey);
-    _player.pause();
-    _player.dispose();
+    if (_isExternal) {
+      // Shared player: don't pause/dispose it — hand it back to its owner so
+      // playback continues in the inline tile.
+      widget.onExternalRelease?.call();
+    } else {
+      _player.pause();
+      _player.dispose();
+    }
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,

@@ -28,6 +28,16 @@ class AdaptivePlayer extends StatefulWidget {
   final String? url2;
   final int cutoffSdk;
 
+  /// Whether this device should use the native Bitmovin SDK (`true`) or the
+  /// `video_player` fallback (`false`). Non-Android is treated as Bitmovin.
+  /// Shared with `LivePlaybackController` so the home inline preview picks the
+  /// same engine as the full-screen player.
+  static Future<bool> useBitmovin({int cutoffSdk = 26}) async {
+    if (!Platform.isAndroid) return true;
+    final info = await DeviceInfoPlugin().androidInfo;
+    return info.version.sdkInt >= cutoffSdk;
+  }
+
   @override
   State<AdaptivePlayer> createState() => _AdaptivePlayerState();
 }

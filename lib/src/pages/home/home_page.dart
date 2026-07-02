@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/live_playback_controller.dart';
 import '../../controllers/main_controller.dart';
 import '../../models/home_components.dart';
 import '../../models/items_list.dart';
@@ -33,6 +34,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final controller = Get.put(MainController());
+  // Owns the shared player behind the live preview tile; route-scoped like
+  // [MainController] so it's disposed when Home is removed (logout/exit).
+  final livePlayback = Get.put(LivePlaybackController());
   final authController = Get.find<AuthController>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final scrollController = ScrollController();

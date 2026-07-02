@@ -18,12 +18,24 @@ class FallbackVideoPlayer extends StatefulWidget {
     required this.title,
     required this.isHLS,
     this.url2,
+    this.externalController,
+    this.onExternalRelease,
   });
 
   final String title;
   final String url;
   final bool isHLS;
   final String? url2;
+
+  /// Shared, already-initialized controller to attach to (home inline→
+  /// full-screen handoff) instead of creating one. When set, this widget does
+  /// NOT initialize or dispose it — a single `VideoPlayerController` can back
+  /// several `VideoPlayer` widgets at once.
+  final VideoPlayerController? externalController;
+
+  /// Called from [dispose] when [externalController] is set, so the owner can
+  /// reclaim the controller (restore mute, hand playback back to the tile).
+  final VoidCallback? onExternalRelease;
 
   @override
   State<FallbackVideoPlayer> createState() => _FallbackVideoPlayerState();
@@ -33,6 +45,7 @@ class _FallbackVideoPlayerState extends State<FallbackVideoPlayer> {
   late VideoPlayerController _controller;
   VideoPlayerController? _backupController;
 
+  bool get _isExternal => widget.externalController != null;
   bool _initialized = false;
   bool _showControls = true;
   bool _forceShowControls = true;
@@ -115,6 +128,22 @@ class _FallbackVideoPlayerState extends State<FallbackVideoPlayer> {
   }
 
   Future<void> _initControllers() async {
+    // Handoff mode: attach to the shared, already-playing controller. Restore
+    // full volume (the inline tile may have muted it) and take over the tick
+    // listener for our controls; don't re-initialize or restart the stream.
+    if (_isExternal) {
+      _controller = widget.externalController!;
+      _initialized = _controller.value.isInitialized;
+      _duration =
+          _controller.value.duration.inMilliseconds.toDouble() / 1000.0;
+      await _controller.setVolume(1.0);
+      _controller.addListener(_onTick);
+      if (!_controller.value.isPlaying) _controller.play();
+      setState(() => _showControls = false);
+      _startAutoHide(seconds: 5);
+      return;
+    }
+
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url));
     await _tryInitialize(_controller);
 
@@ -272,8 +301,14 @@ class _FallbackVideoPlayerState extends State<FallbackVideoPlayer> {
   void dispose() {
     _controlsHideTimer?.cancel();
     _controller.removeListener(_onTick);
-    _controller.dispose();
-    _backupController?.dispose();
+    if (_isExternal) {
+      // Shared controller: don't dispose it — hand it back so the inline tile
+      // keeps playing.
+      widget.onExternalRelease?.call();
+    } else {
+      _controller.dispose();
+      _backupController?.dispose();
+    }
     WakelockPlus.disable();
     _focusNode.dispose();
     HardwareKeyboard.instance.removeHandler(_onGlobalKey);

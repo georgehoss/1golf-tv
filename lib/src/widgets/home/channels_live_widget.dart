@@ -1,10 +1,12 @@
+import 'package:bitmovin_player/bitmovin_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../controllers/live_playback_controller.dart';
 import '../../controllers/main_controller.dart';
 import '../../models/home_components.dart';
 import '../../models/items_list.dart';
@@ -101,6 +103,12 @@ class _ChannelsLiveWidgetState extends State<ChannelsLiveWidget> {
               child: ListView.builder(
                 controller: _hScrollController,
                 scrollDirection: Axis.horizontal,
+                // Keep the live preview tile (index 0) mounted while the row is
+                // scrolled so its shared Bitmovin platform view isn't torn down
+                // and recreated (the source of the jank/ANR the old flick-based
+                // tile was chosen to avoid). The row is short, so eagerly
+                // building it all is cheap.
+                scrollCacheExtent: const ScrollCacheExtent.pixels(5000),
                 itemCount: channelItems.length + leagueItems.length,
                 itemBuilder: (context, index) {
                   if (index == 0 && channelItems.isNotEmpty) {
@@ -411,15 +419,11 @@ class _ChannelCardChrome extends StatelessWidget {
 }
 
 /// The channel at index 0 renders as a live inline preview instead of a
-/// static thumbnail: it resolves the same URL (Dailymotion or direct stream)
-/// as the full-screen player via [MainController.resolveChannelUrl], plays
-/// muted while unfocused and unmuted while focused, and opens the full-screen
-/// player on select — same entry point as [ChannelLiveCard].
-///
-/// Uses `flick_video_player` (already a dependency) instead of Bitmovin for
-/// this small always-on tile: it's much lighter weight than spinning up a
-/// native Bitmovin view per card, and avoids the native-teardown jank/ANR
-/// risk documented in [LivePreviewPage].
+/// static thumbnail. Playback is owned by the shared [LivePlaybackController],
+/// which uses the same adaptive engine as the full-screen player (native
+/// Bitmovin on SDK ≥ 26, `video_player` otherwise). The tile plays muted while
+/// unfocused, unmuted while focused, and on select hands its already-playing
+/// player to the full-screen route with no reload — resuming inline on return.
 class _LiveChannelPreviewCard extends StatefulWidget {
   const _LiveChannelPreviewCard({
     required this.channel,
@@ -442,70 +446,86 @@ class _LiveChannelPreviewCard extends StatefulWidget {
 
 class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
   bool _hasFocus = false;
-  bool _failed = false;
-  FlickManager? _flickManager;
+  final LivePlaybackController _playback = Get.find<LivePlaybackController>();
 
   @override
   void initState() {
     super.initState();
-    _initPreview();
-  }
-
-  Future<void> _initPreview() async {
-    try {
-      final controller = Get.find<MainController>();
-      final (url, _) = await controller.resolveChannelUrl(widget.channel);
-      if (!mounted) return;
-      if (url.isEmpty) {
-        setState(() => _failed = true);
-        return;
-      }
-      final videoController = VideoPlayerController.networkUrl(Uri.parse(url));
-      videoController.addListener(_onVideoTick);
-      final flickManager = FlickManager(videoPlayerController: videoController);
-      if (!mounted) {
-        flickManager.dispose();
-        return;
-      }
-      setState(() => _flickManager = flickManager);
-      _applyMuteState();
-    } catch (_) {
-      if (mounted) setState(() => _failed = true);
-    }
-  }
-
-  void _onVideoTick() {
-    final hasError =
-        _flickManager?.flickVideoManager?.videoPlayerValue?.hasError ?? false;
-    if (hasError && mounted && !_failed) {
-      setState(() => _failed = true);
-    }
-  }
-
-  void _applyMuteState() {
-    final control = _flickManager?.flickControlManager;
-    if (control == null) return;
-    _hasFocus ? control.unmute() : control.mute();
+    _playback.ensureStarted(widget.channel);
   }
 
   @override
-  void dispose() {
-    _flickManager?.flickVideoManager?.videoPlayerController?.removeListener(
-      _onVideoTick,
-    );
-    _flickManager?.dispose();
-    super.dispose();
+  void didUpdateWidget(covariant _LiveChannelPreviewCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.channel.objectId != widget.channel.objectId) {
+      _playback.ensureStarted(widget.channel);
+    }
   }
 
+  /// Select: if the shared player is already playing, hand it to the
+  /// full-screen route (no reload) and restore focus-based mute on return.
+  /// Otherwise fall back to the legacy resolve-and-push flow with a fresh
+  /// player (covers the case where the inline preview never started).
   Future<void> _open(BuildContext context) async {
-    final controller = Get.find<MainController>();
-    controller.selectChannel(widget.channel);
-    _flickManager?.flickControlManager?.pause();
-    await _openLiveChannel(context, widget.channel);
-    if (mounted) {
-      _flickManager?.flickControlManager?.play();
-      _applyMuteState();
+    Get.find<MainController>().selectChannel(widget.channel);
+    if (_playback.status.value == LivePlaybackStatus.playing) {
+      await _playback.enterFullscreen();
+      await Get.to(
+        () => LivePreviewPage(
+          url: _playback.url,
+          url2: _playback.url2,
+          title: widget.channel.title ?? '',
+          playback: _playback,
+        ),
+      );
+      _playback.setInlineFocused(_hasFocus);
+    } else {
+      await _openLiveChannel(context, widget.channel);
     }
+  }
+
+  /// The inline video background, reactive to the shared player's state. Shows
+  /// the thumbnail while idle/failed or while the full-screen route owns the
+  /// player (only one view may attach to a Bitmovin player at a time).
+  Widget _background() {
+    return Obx(() {
+      final status = _playback.status.value;
+      final inlineOwned = _playback.viewOwner.value == LiveViewOwner.inline;
+      final live =
+          inlineOwned &&
+          (status == LivePlaybackStatus.playing ||
+              status == LivePlaybackStatus.starting);
+
+      if (live && _playback.usesBitmovin && _playback.bitmovinPlayer != null) {
+        return PlayerView(
+          player: _playback.bitmovinPlayer!,
+          key: ValueKey('inline-${_playback.bitmovinPlayer.hashCode}'),
+          playerViewConfig: const PlayerViewConfig(
+            pictureInPictureConfig: PictureInPictureConfig(isEnabled: false),
+          ),
+        );
+      }
+      final vc = _playback.videoController;
+      if (live && !_playback.usesBitmovin && vc != null) {
+        return FittedBox(
+          fit: BoxFit.cover,
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            width: vc.value.size.width,
+            height: vc.value.size.height,
+            child: VideoPlayer(vc),
+          ),
+        );
+      }
+      return CachedNetworkImage(
+        imageUrl: widget.channel.thummb ?? '',
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorWidget: (context, url, error) =>
+            Image.asset(ImageIndex.logo, fit: BoxFit.cover),
+      );
+    });
   }
 
   @override
@@ -578,7 +598,7 @@ class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
         focusNode: focusNode,
         onFocusChange: (value) {
           setState(() => _hasFocus = value);
-          _applyMuteState();
+          _playback.setInlineFocused(value);
           if (value) {
             Scrollable.ensureVisible(
               context,
@@ -594,27 +614,7 @@ class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
             hasFocus: _hasFocus,
             title: widget.channel.title ?? '',
             showTitle: false,
-            background: (_flickManager != null && !_failed)
-                ? FlickVideoPlayer(
-                    flickManager: _flickManager!,
-                    wakelockEnabled: false,
-                    wakelockEnabledFullscreen: false,
-                    preferredDeviceOrientation: const [
-                      DeviceOrientation.landscapeLeft,
-                      DeviceOrientation.landscapeRight,
-                    ],
-                    flickVideoWithControls: const FlickVideoWithControls(
-                      videoFit: BoxFit.cover,
-                    ),
-                  )
-                : CachedNetworkImage(
-                    imageUrl: widget.channel.thummb ?? '',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    errorWidget: (context, url, error) =>
-                        Image.asset(ImageIndex.logo, fit: BoxFit.cover),
-                  ),
+            background: _background(),
           ),
         ),
       ),

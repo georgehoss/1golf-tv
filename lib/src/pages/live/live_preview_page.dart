@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/live_playback_controller.dart';
 import '../player/adaptative_player.dart';
+import '../player/bitmovin_player.dart';
+import '../player/fallback_player.dart';
 
 /// Full-screen live channel playback. Adapted from
 /// `one_baseball_android_tv/lib/src/pages/live/live_preview_page.dart`:
@@ -20,11 +23,16 @@ class LivePreviewPage extends StatefulWidget {
     required this.url,
     this.url2,
     required this.title,
+    this.playback,
   });
 
   final String url;
   final String? url2;
   final String title;
+
+  /// When set (home inline→full-screen handoff), attach to the shared player
+  /// this controller owns instead of creating a fresh one via [AdaptivePlayer].
+  final LivePlaybackController? playback;
 
   @override
   State<LivePreviewPage> createState() => _LivePreviewPageState();
@@ -38,18 +46,42 @@ class _LivePreviewPageState extends State<LivePreviewPage> {
       body: Stack(
         children: [
           Center(
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: AdaptivePlayer(
-                title: widget.title,
-                url: widget.url,
-                url2: widget.url2,
-                isHLS: true,
-              ),
-            ),
+            child: AspectRatio(aspectRatio: 16 / 9, child: _player()),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _player() {
+    final playback = widget.playback;
+    if (playback == null) {
+      return AdaptivePlayer(
+        title: widget.title,
+        url: widget.url,
+        url2: widget.url2,
+        isHLS: true,
+      );
+    }
+    // Handoff: the engine was already chosen by the controller; attach to its
+    // shared player/controller so the stream continues without a reload.
+    if (playback.usesBitmovin) {
+      return BitmovinPlayer(
+        title: widget.title,
+        url: widget.url,
+        url2: widget.url2,
+        isHLS: true,
+        externalPlayer: playback.bitmovinPlayer,
+        onExternalRelease: playback.onFullscreenReleased,
+      );
+    }
+    return FallbackVideoPlayer(
+      title: widget.title,
+      url: widget.url,
+      url2: widget.url2,
+      isHLS: true,
+      externalController: playback.videoController,
+      onExternalRelease: playback.onFullscreenReleased,
     );
   }
 }
