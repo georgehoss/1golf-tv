@@ -23,7 +23,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      // 24dp leading padding keeps the rail clear of the TV-safe overscan
+      // margin (Google's Android TV guideline: content should sit ~27dp
+      // from any screen edge, since older TVs crop a few percent).
+      padding: const EdgeInsets.only(left: 24, right: 5),
       color: const Color(0xFF0B2433),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

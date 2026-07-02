@@ -13,6 +13,7 @@ import '../../widgets/home/channels_live_widget.dart';
 import '../../widgets/home/home_calendar_widget.dart';
 import '../../widgets/home/show_list_widget.dart';
 import '../../widgets/common/item_list_widget.dart';
+import '../../widgets/common/tv_action_button.dart';
 
 /// Home screen. Section order and content widgets mirror `one_golf_app`
 /// (channels/live → calendar → leagues → shows → itemslist_N) — NOT the
@@ -38,6 +39,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   final Map<String, FocusNode> _sectionFocus = {};
   bool _initialFocusRequested = false;
+  final _retryFocusNode = FocusNode();
 
   FocusNode _focusFor(String key) =>
       _sectionFocus.putIfAbsent(key, () => FocusNode());
@@ -69,6 +71,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     for (final node in _sectionFocus.values) {
       node.dispose();
     }
+    _retryFocusNode.dispose();
     super.dispose();
   }
 
@@ -131,9 +134,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
+              TvActionButton(
+                focusNode: _retryFocusNode,
+                label: 'Reintentar',
                 onPressed: controller.getData,
-                child: const Text('Reintentar'),
               ),
             ],
           ),

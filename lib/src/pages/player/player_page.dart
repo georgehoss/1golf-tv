@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/items_list.dart';
+import '../../widgets/common/tv_action_button.dart';
 import 'adaptative_player.dart';
 
 /// VOD playback for a show/league/itemslist video item. Ported from
@@ -15,6 +16,14 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayer> {
+  final _backFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _backFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final videoUrl = widget.item.media ?? widget.item.fullPathEvent;
@@ -32,9 +41,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
+              TvActionButton(
+                focusNode: _backFocusNode,
+                label: 'Volver',
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Volver'),
               ),
             ],
           ),

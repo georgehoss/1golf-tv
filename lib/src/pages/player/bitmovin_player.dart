@@ -684,6 +684,9 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
                   },
                 ),
               ),
+              // TV-safe trailing margin: the slider would otherwise touch
+              // the right screen edge, at risk of overscan cropping.
+              const SizedBox(width: 24),
             ],
           ),
           const SizedBox(height: 20),
