@@ -160,7 +160,7 @@ class _ShowDetailContentState extends State<ShowDetailContent> {
                 Text(
                   show.title ?? '',
                   style: const TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                     color: Color(0xFFFBB03B),
@@ -172,7 +172,7 @@ class _ShowDetailContentState extends State<ShowDetailContent> {
                     child: Text(
                       show.description!,
                       style: const TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Montserrat',
                         fontSize: 14,
                         color: Colors.white70,
                       ),

@@ -366,7 +366,7 @@ class _ChannelCardChrome extends StatelessWidget {
                       child: AnimatedDefaultTextStyle(
                         duration: const Duration(milliseconds: 300),
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Montserrat',
                           fontSize: hasFocus ? 14 : 12,
                           fontWeight: hasFocus
                               ? FontWeight.bold
@@ -397,7 +397,7 @@ class _ChannelCardChrome extends StatelessWidget {
           child: const Text(
             'EN VIVO',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
               fontSize: 8,
               color: Colors.black,

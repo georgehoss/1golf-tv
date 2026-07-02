@@ -1,0 +1,31 @@
+# bitmovin_player optionally references the IMA Ads SDK and Cronet. Those classes
+# are not on the classpath, so they are silenced for R8. Kept for parity with the
+# golf mobile app; note R8/minify is disabled in build.gradle.kts (see release block).
+-dontwarn com.google.ads.interactivemedia.v3.api.Ad
+-dontwarn com.google.ads.interactivemedia.v3.api.AdDisplayContainer
+-dontwarn com.google.ads.interactivemedia.v3.api.AdError$AdErrorCode
+-dontwarn com.google.ads.interactivemedia.v3.api.AdError
+-dontwarn com.google.ads.interactivemedia.v3.api.AdErrorEvent$AdErrorListener
+-dontwarn com.google.ads.interactivemedia.v3.api.AdErrorEvent
+-dontwarn com.google.ads.interactivemedia.v3.api.AdEvent$AdEventListener
+-dontwarn com.google.ads.interactivemedia.v3.api.AdEvent$AdEventType
+-dontwarn com.google.ads.interactivemedia.v3.api.AdEvent
+-dontwarn com.google.ads.interactivemedia.v3.api.AdsLoader$AdsLoadedListener
+-dontwarn com.google.ads.interactivemedia.v3.api.AdsLoader
+-dontwarn com.google.ads.interactivemedia.v3.api.AdsManager
+-dontwarn com.google.ads.interactivemedia.v3.api.AdsManagerLoadedEvent
+-dontwarn com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
+-dontwarn com.google.ads.interactivemedia.v3.api.AdsRequest
+-dontwarn com.google.ads.interactivemedia.v3.api.CompanionAdSlot
+-dontwarn com.google.ads.interactivemedia.v3.api.ImaSdkFactory
+-dontwarn com.google.ads.interactivemedia.v3.api.ImaSdkSettings
+-dontwarn com.google.ads.interactivemedia.v3.api.UiElement
+-dontwarn com.google.ads.interactivemedia.v3.api.UniversalAdId
+-dontwarn com.google.ads.interactivemedia.v3.api.player.ContentProgressProvider
+-dontwarn com.google.ads.interactivemedia.v3.api.player.VideoAdPlayer
+-dontwarn org.chromium.net.UploadDataProvider
+-dontwarn org.chromium.net.UrlRequest$Builder
+-dontwarn org.chromium.net.UrlRequest$Callback
+-dontwarn org.chromium.net.UrlRequest$StatusListener
+-dontwarn org.chromium.net.UrlRequest
+-dontwarn org.chromium.net.UrlResponseInfo

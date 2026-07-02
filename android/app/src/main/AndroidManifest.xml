@@ -9,9 +9,8 @@
     <application
         android:label="1Golf"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        <!-- TODO(branding): agregar android:banner="@drawable/ic_banner" (320x180) con
-             el arte de golf una vez esté disponible en la etapa de branding. -->
+        android:icon="@mipmap/ic_launcher"
+        android:banner="@drawable/ic_banner">
         <activity
             android:name=".MainActivity"
             android:exported="true"

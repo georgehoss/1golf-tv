@@ -64,7 +64,7 @@ class _ShowListWidgetState extends State<ShowListWidget> {
             Text(
               widget.shows.title!,
               style: const TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Montserrat',
                 color: Color(0xFFFBB03B),
                 fontWeight: FontWeight.bold,
               ),
@@ -245,7 +245,7 @@ class _ShowCardState extends State<ShowCard> {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Montserrat',
                     fontSize: 12,
                     color: Colors.white,
                     fontWeight: _hasFocus ? FontWeight.bold : FontWeight.normal,

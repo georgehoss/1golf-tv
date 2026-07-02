@@ -159,7 +159,7 @@ class _LeagueDetailContentState extends State<LeagueDetailContent> {
                   child: Text(
                     league.title ?? '',
                     style: const TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                       color: Color(0xFFFBB03B),

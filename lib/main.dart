@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
-        fontFamily: 'Inter',
+        fontFamily: 'Montserrat',
         primaryColor: const Color(0xFF01274F),
         scaffoldBackgroundColor: const Color(0xFF01274F),
         colorScheme: const ColorScheme.dark(

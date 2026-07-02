@@ -10,8 +10,8 @@ import '../../utils/image_index.dart';
 /// Font used for the calendar cards. The 1Golf design calls for "GC Frank"
 /// (Golf Channel's proprietary typeface); until that licensed font file is
 /// dropped into `fonts/` and registered in `pubspec.yaml`, this falls back
-/// to Inter. Swap this single constant to `'GCFrank'` once the font is added.
-const String _calendarFont = 'Inter';
+/// to Montserrat. Swap this single constant to `'GCFrank'` once the font is added.
+const String _calendarFont = 'Montserrat';
 
 /// Horizontal list of upcoming tournaments. UX ported from
 /// `one_golf_app/lib/src/widgets/home/home_calendar_widget.dart` (tournament

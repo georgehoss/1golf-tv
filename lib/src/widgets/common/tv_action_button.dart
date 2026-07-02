@@ -87,7 +87,7 @@ class _TvActionButtonState extends State<TvActionButton> {
               widget.label,
               style: const TextStyle(
                 color: Color(0xFF01274F),
-                fontFamily: 'Inter',
+                fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),

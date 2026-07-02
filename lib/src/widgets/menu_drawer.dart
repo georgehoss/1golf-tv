@@ -213,7 +213,7 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget> {
                     widget.title,
                     style: TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
                       fontSize: isSelected ? 22 : 18,
                     ),

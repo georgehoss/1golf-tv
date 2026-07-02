@@ -133,7 +133,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Montserrat',
                     ),
                   ),
                   const SizedBox(height: 15),

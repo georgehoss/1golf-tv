@@ -72,7 +72,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
             Text(
               widget.itemsList.title!,
               style: const TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Montserrat',
                 color: Color(0xFFFBB03B),
                 fontWeight: FontWeight.bold,
               ),
@@ -266,7 +266,7 @@ class _ItemCardState extends State<ItemCard> {
                   maxLines: _hasFocus ? 3 : 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Montserrat',
                     fontSize: _hasFocus ? 13 : 11,
                     fontWeight: _hasFocus ? FontWeight.bold : FontWeight.normal,
                     color: Colors.white,

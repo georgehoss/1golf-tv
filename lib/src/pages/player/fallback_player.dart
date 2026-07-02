@@ -577,7 +577,7 @@ class _FallbackVideoPlayerState extends State<FallbackVideoPlayer> {
                   child: const Text(
                     'EN VIVO',
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
                       fontSize: 10,
                     ),

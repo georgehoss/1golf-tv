@@ -470,7 +470,7 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
         'EN VIVO',
         style: TextStyle(
           shadows: [Shadow(color: Colors.black, blurRadius: 2)],
-          fontFamily: 'Inter',
+          fontFamily: 'Montserrat',
           fontWeight: FontWeight.bold,
           fontSize: 10,
         ),
