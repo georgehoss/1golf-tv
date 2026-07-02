@@ -7,6 +7,12 @@ import '../../controllers/main_controller.dart';
 import '../../models/calendar_components.dart';
 import '../../utils/image_index.dart';
 
+/// Font used for the calendar cards. The 1Golf design calls for "GC Frank"
+/// (Golf Channel's proprietary typeface); until that licensed font file is
+/// dropped into `fonts/` and registered in `pubspec.yaml`, this falls back
+/// to Inter. Swap this single constant to `'GCFrank'` once the font is added.
+const String _calendarFont = 'Inter';
+
 /// Horizontal list of upcoming tournaments. UX ported from
 /// `one_golf_app/lib/src/widgets/home/home_calendar_widget.dart` (tournament
 /// card: logo + name + course + location + date) — NOT from the baseball TV
@@ -192,7 +198,9 @@ class _CalendarCardState extends State<CalendarCard> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              // Logo aligns to the TOP of the text block (top of the title),
+              // matching the 1Golf mockup — not vertically centered.
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 CachedNetworkImage(
@@ -208,6 +216,7 @@ class _CalendarCardState extends State<CalendarCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Title: bold.
                       Text(
                         widget.tournament.name ?? '',
                         maxLines: 1,
@@ -217,10 +226,11 @@ class _CalendarCardState extends State<CalendarCard> {
                               ? const Color(0xFFFBB03B)
                               : Colors.white,
                           fontSize: 13,
-                          fontFamily: 'Inter',
+                          fontFamily: _calendarFont,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      // Subtitle (course): light.
                       Text(
                         widget.tournament.course ?? '',
                         maxLines: 1,
@@ -228,16 +238,19 @@ class _CalendarCardState extends State<CalendarCard> {
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 11,
-                          fontFamily: 'Inter',
+                          fontFamily: _calendarFont,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
+                      const SizedBox(height: 2),
+                      // Date: white, light.
                       Text(
                         widget.tournament.date ?? '',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold,
+                          fontFamily: _calendarFont,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                     ],
