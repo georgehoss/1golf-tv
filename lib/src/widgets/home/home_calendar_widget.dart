@@ -67,10 +67,14 @@ class _HomeCalendarState extends State<HomeCalendar> {
             height: 94,
             child: FocusTraversalGroup(
               descendantsAreFocusable: true,
-              child: ListView.builder(
+              child: ListView.separated(
                 controller: _hScrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.calendar.length,
+                separatorBuilder: (_, _) => const VerticalDivider(
+                  color: Colors.white,
+                  thickness: 0.5,
+                ),
                 itemBuilder: (context, index) {
                   return CalendarCard(
                     tournament: widget.calendar[index],
@@ -183,21 +187,10 @@ class _CalendarCardState extends State<CalendarCard> {
             );
           }
         },
-        child: AnimatedScale(
-          scale: _hasFocus ? 1.05 : 1.0,
-          duration: const Duration(milliseconds: 200),
-          child: Container(
-            width: Get.width * 0.55,
-            margin: const EdgeInsets.only(right: 10),
+        child: SizedBox(
+          width: Get.width * 0.28,
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: _hasFocus ? 0.15 : 0.06),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: _hasFocus ? const Color(0xFFFBB03B) : Colors.transparent,
-                width: 2,
-              ),
-            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -219,8 +212,10 @@ class _CalendarCardState extends State<CalendarCard> {
                         widget.tournament.name ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: _hasFocus
+                              ? const Color(0xFFFBB03B)
+                              : Colors.white,
                           fontSize: 13,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.bold,

@@ -143,6 +143,7 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget> {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
         LogicalKeySet(LogicalKeyboardKey.arrowDown): const _DownIntent(),
         LogicalKeySet(LogicalKeyboardKey.arrowUp): const _UpIntent(),
+        LogicalKeySet(LogicalKeyboardKey.goBack): const _ExitAppIntent(),
       },
       actions: {
         _DownIntent: CallbackAction(
@@ -163,6 +164,20 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget> {
         ActivateIntent: CallbackAction(
           onInvoke: (intent) {
             widget.onTap?.call();
+            return null;
+          },
+        ),
+        // Stage 3 of the TV back-button policy: back while the side drawer
+        // itself has focus exits the app (Google Play TV app quality
+        // requires this escape hatch). Ported from `one_baseball_android_tv`'s
+        // `DrawerItemWidget` — every horizontal list's own back handler
+        // (Stage 1/2) only ever gets you as far as opening this drawer.
+        _ExitAppIntent: CallbackAction(
+          onInvoke: (intent) {
+            final controller = Get.find<MainController>();
+            controller.setExitApp(true);
+            controller.closeDrawer();
+            SystemNavigator.pop();
             return null;
           },
         ),
@@ -219,4 +234,8 @@ class _UpIntent extends Intent {
 
 class _DownIntent extends Intent {
   const _DownIntent();
+}
+
+class _ExitAppIntent extends Intent {
+  const _ExitAppIntent();
 }

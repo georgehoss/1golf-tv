@@ -185,7 +185,7 @@ class _ShowCardState extends State<ShowCard> {
                 objectId: widget.item.objectId,
                 title: widget.item.title,
                 image: widget.item.image,
-                logo: widget.item.logo,
+                logo: widget.item.thumb,
                 private: widget.item.private,
               ),
             );
@@ -228,7 +228,7 @@ class _ShowCardState extends State<ShowCard> {
                       ),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: widget.item.logo ?? widget.item.image ?? '',
+                      imageUrl: widget.item.thumb ?? widget.item.image ?? '',
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) =>
                           Image.asset(ImageIndex.logo, fit: BoxFit.fitHeight),

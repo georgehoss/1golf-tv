@@ -20,14 +20,6 @@ class _LeagueDetailPageState extends State<LeagueDetailPage> {
   final controller = Get.find<MainController>();
 
   @override
-  void initState() {
-    super.initState();
-    if (!controller.hasLeagueDetail()) {
-      controller.getLeagueDetails();
-    }
-  }
-
-  @override
   void dispose() {
     controller.hasLeagueDetail.value = false;
     super.dispose();

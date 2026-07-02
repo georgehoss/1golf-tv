@@ -9,22 +9,22 @@ class ItemsList {
   ItemsList({this.title, this.type, this.items});
 
   factory ItemsList.fromJson(Map<String, dynamic> json) => ItemsList(
-        title: json['title'],
-        type: json['type'],
-        items: json['items'] == null
-            ? []
-            : List<ItemsListItem>.from(
-                json['items']!.map((x) => ItemsListItem.fromJson(x)),
-              ),
-      );
+    title: json['title'],
+    type: json['type'],
+    items: json['items'] == null
+        ? []
+        : List<ItemsListItem>.from(
+            json['items']!.map((x) => ItemsListItem.fromJson(x)),
+          ),
+  );
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'type': type,
-        'items': items == null
-            ? []
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
-      };
+    'title': title,
+    'type': type,
+    'items': items == null
+        ? []
+        : List<dynamic>.from(items!.map((x) => x.toJson())),
+  };
 }
 
 class ItemsListItem {
@@ -32,7 +32,7 @@ class ItemsListItem {
   String? size;
   String? title;
   String? image;
-  String? logo;
+  String? thumb;
   String? media; // Video URL
   String? fullPathEvent; // Alternative video URL
   String? type;
@@ -46,7 +46,7 @@ class ItemsListItem {
     this.size,
     this.title,
     this.image,
-    this.logo,
+    this.thumb,
     this.media,
     this.fullPathEvent,
     this.type,
@@ -57,35 +57,35 @@ class ItemsListItem {
   });
 
   factory ItemsListItem.fromJson(Map<String, dynamic> json) => ItemsListItem(
-        objectId: json['object_id'],
-        size: json['size'],
-        title: json['title'],
-        // La API devuelve `false` (bool) en vez de null cuando no hay imagen.
-        image: _asString(json['image']),
-        logo: _asString(json['logo']),
-        media: _asString(json['media']),
-        fullPathEvent: _asString(json['fullPathEvent']),
-        type: json['type'],
-        dateevent: json['dateevent'],
-        content: json['content'],
-        private: json['private'],
-        todetail: json['todetail'],
-      );
+    objectId: json['object_id'],
+    size: json['size'],
+    title: json['title'],
+    // La API devuelve `false` (bool) en vez de null cuando no hay imagen.
+    image: _asString(json['image']),
+    thumb: _asString(json['thumb'] ?? json['logo']),
+    media: _asString(json['media']),
+    fullPathEvent: _asString(json['fullPathEvent']),
+    type: json['type'],
+    dateevent: json['dateevent'],
+    content: json['content'],
+    private: json['private'],
+    todetail: json['todetail'],
+  );
 
   static String? _asString(dynamic value) => value is String ? value : null;
 
   Map<String, dynamic> toJson() => {
-        'object_id': objectId,
-        'size': size,
-        'title': title,
-        'image': image,
-        'logo': logo,
-        'media': media,
-        'fullPathEvent': fullPathEvent,
-        'type': type,
-        'dateevent': dateevent,
-        'content': content,
-        'private': private,
-        'todetail': todetail,
-      };
+    'object_id': objectId,
+    'size': size,
+    'title': title,
+    'image': image,
+    'logo': thumb,
+    'media': media,
+    'fullPathEvent': fullPathEvent,
+    'type': type,
+    'dateevent': dateevent,
+    'content': content,
+    'private': private,
+    'todetail': todetail,
+  };
 }

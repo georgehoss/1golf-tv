@@ -20,14 +20,6 @@ class _ShowDetailPageState extends State<ShowDetailPage> {
   final controller = Get.find<MainController>();
 
   @override
-  void initState() {
-    super.initState();
-    if (!controller.hasShowDetail()) {
-      controller.getShowDetails();
-    }
-  }
-
-  @override
   void dispose() {
     controller.hasShowDetail.value = false;
     super.dispose();
