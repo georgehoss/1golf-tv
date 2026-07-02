@@ -327,52 +327,58 @@ class _ChannelCardChrome extends StatelessWidget {
     required this.background,
     required this.title,
     required this.hasFocus,
+    this.showTitle = true,
   });
 
   final Widget background;
   final String title;
   final bool hasFocus;
 
+  /// The live preview card (index 0) hides its title: it's the big 16:9
+  /// player and the stream already carries its own on-screen branding.
+  final bool showTitle;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         ClipRRect(borderRadius: BorderRadius.circular(5), child: background),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CardShadow(
-              width: double.infinity,
-              height: 150,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 300),
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: hasFocus ? 14 : 12,
-                        fontWeight: hasFocus
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        color: Colors.white,
-                      ),
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        maxLines: hasFocus ? 2 : 1,
-                        overflow: TextOverflow.ellipsis,
+        if (showTitle)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CardShadow(
+                width: double.infinity,
+                height: 150,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 300),
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: hasFocus ? 14 : 12,
+                          fontWeight: hasFocus
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: Colors.white,
+                        ),
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          maxLines: hasFocus ? 2 : 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                ],
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         Container(
           margin: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
@@ -587,6 +593,7 @@ class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
           child: _ChannelCardChrome(
             hasFocus: _hasFocus,
             title: widget.channel.title ?? '',
+            showTitle: false,
             background: (_flickManager != null && !_failed)
                 ? FlickVideoPlayer(
                     flickManager: _flickManager!,
