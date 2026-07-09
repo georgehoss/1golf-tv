@@ -317,7 +317,7 @@ class _ChannelLiveCardState extends State<ChannelLiveCard> {
               width: double.infinity,
               height: double.infinity,
               errorWidget: (context, url, error) =>
-                  Image.asset(ImageIndex.logo, fit: BoxFit.cover),
+                  Image.asset(ImageIndex.logo, fit: BoxFit.contain),
             ),
           ),
         ),
@@ -522,8 +522,10 @@ class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        errorWidget: (context, url, error) =>
-            Image.asset(ImageIndex.logo, fit: BoxFit.cover),
+        errorWidget: (context, url, error) => ColoredBox(
+          color: const Color(0xFF0C213F),
+          child: Center(child: Image.asset(ImageIndex.logo, width: 72)),
+        ),
       );
     });
   }

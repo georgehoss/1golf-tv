@@ -134,8 +134,7 @@ class _FallbackVideoPlayerState extends State<FallbackVideoPlayer> {
     if (_isExternal) {
       _controller = widget.externalController!;
       _initialized = _controller.value.isInitialized;
-      _duration =
-          _controller.value.duration.inMilliseconds.toDouble() / 1000.0;
+      _duration = _controller.value.duration.inMilliseconds.toDouble() / 1000.0;
       await _controller.setVolume(1.0);
       _controller.addListener(_onTick);
       if (!_controller.value.isPlaying) _controller.play();

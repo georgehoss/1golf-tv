@@ -62,6 +62,12 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
   double duration = 0;
   bool isSeeking = true;
   bool _didScheduleFirstHide = false;
+  // Bitmovin's event setters are append-only (`_addListener` never removes), so
+  // the closures we register on a shared/external player outlive this widget and
+  // keep firing forever. `mounted` alone can't guard them (there is a window
+  // where the element is already `defunct` but `mounted` still reads true), so
+  // every event closure bails on this flag, set synchronously in `dispose`.
+  bool _disposed = false;
   Timer? _firstPlayHideTimer;
   Timer? _controlsHideTimer;
   // Scrubbing state
@@ -177,15 +183,18 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
   void _listen() {
     _player
       ..onError = (event) {
+        if (_disposed) return;
         _logger.e('Error: ${event.message}');
         isError = true;
         _loadFallbackSource(); // Intentar cargar la URL de respaldo si ocurre un error
       }
       ..onTimeChanged = (event) async {
+        if (_disposed) return;
         currentTime = event.time;
         if (duration <= 0) {
           duration = await _player.duration;
         }
+        if (_disposed) return;
         if (!isSeeking && mounted) {
           setState(() {
             forceShowControls = false;
@@ -199,6 +208,7 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
         }
       }
       ..onSourceError = (event) {
+        if (_disposed) return;
         _logger.e('Source error: ${event.toJson()}');
         if (event.code == 2201) {
           isError = true;
@@ -218,10 +228,12 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
         }
       }
       ..onSourceUnloaded = (event) {
+        if (_disposed) return;
         _logger.i('Source unloaded: ${event.toJson()}');
         _loadFallbackSource(); // Intentar cargar la URL de respaldo si se descarga la fuente
       }
       ..onPaused = (event) async {
+        if (_disposed) return;
         _logger.i('Paused: ${event.toJson()}');
         if (mounted) {
           currentTime = await _player.currentTime;
@@ -233,6 +245,7 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
         }
       }
       ..onSeek = (event) async {
+        if (_disposed) return;
         isSeeking = true;
         forceShowControls = true;
         if (mounted) {
@@ -240,8 +253,10 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
         }
       }
       ..onSeeked = (event) async {
+        if (_disposed) return;
         if (isSeeking) {
           Future.delayed(const Duration(seconds: 5), () {
+            if (_disposed) return;
             isSeeking = false;
             if (mounted) {
               setState(() {});
@@ -250,6 +265,7 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
         }
       }
       ..onPlay = (event) {
+        if (_disposed) return;
         _logger.i('Playing: ${event.toJson()}');
         if (mounted) {
           setState(() {
@@ -280,6 +296,13 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
     if (_isExternal) {
       _player = widget.externalPlayer!;
       _listen();
+      // The shared player is already playing, so `onPlay` won't fire again to
+      // schedule the initial control hide, and the `isSeeking` seed would keep
+      // `onTimeChanged` from dimming the overlay. Prime both here so the
+      // controls auto-hide just like on a freshly-created player.
+      isSeeking = false;
+      _didScheduleFirstHide = true;
+      _startAutoHide(seconds: 5);
       return;
     }
 
@@ -304,14 +327,18 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
   }
 
   @override
-  void dispose() async {
+  void dispose() {
+    // Set first: Bitmovin listeners we registered can't be unregistered and
+    // keep firing on the shared player, so every event closure checks this.
+    _disposed = true;
     _firstPlayHideTimer?.cancel();
     _controlsHideTimer?.cancel();
+    _scrubTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     HardwareKeyboard.instance.removeHandler(_onGlobalKey);
     if (_isExternal) {
       // Shared player: don't pause/dispose it — hand it back to its owner so
-      // playback continues in the inline tile.
+      // playback continues in the inline tile (it re-binds its own handlers).
       widget.onExternalRelease?.call();
     } else {
       _player.pause();

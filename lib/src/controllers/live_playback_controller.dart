@@ -244,8 +244,14 @@ class LivePlaybackController extends GetxController
   /// handlers — then restores inline ownership and focus-based mute.
   void onFullscreenReleased() {
     if (usesBitmovin) _bindBitmovinListeners();
-    viewOwner.value = LiveViewOwner.inline;
-    _applyInlineMute();
+    // This runs from the full-screen player's `dispose`, i.e. during
+    // `finalizeTree` while the widget tree is locked. Writing the `viewOwner`
+    // observable now would rebuild the inline `Obx` mid-unmount and throw, so
+    // defer the ownership swap (and mute) until the frame is done.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewOwner.value = LiveViewOwner.inline;
+      _applyInlineMute();
+    });
   }
 
   // ─── App lifecycle ───────────────────────────────────────────────────────
