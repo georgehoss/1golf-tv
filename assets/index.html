@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>1Golf</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent !important;
+      }
+      #player {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent !important;
+        will-change: transform;
+        transform: translateZ(0);
+      }
+    </style>
+
+    <!-- Bitmovin Web Player SDK v8. Tizen has no native Bitmovin SDK, so the
+         Tizen build plays through this page inside a WebView. Modules are
+         loaded explicitly (core is module-based) and registered in
+         registerModules(); `bitmovinplayer-tizen.js` is the Tizen-specific
+         playback engine. -->
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-core.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-polyfill.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-engine-bitmovin.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-engine-native.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-container-mp4.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-container-ts.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-mserenderer.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-xml.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-hls.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-dash.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-abr.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-style.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-drm.js"></script>
+    <script src="https://cdn.bitmovin.com/player/web/8/modules/bitmovinplayer-tizen.js"></script>
+  </head>
+  <body>
+    <div id="player"></div>
+
+    <script>
+      // Bridge to Flutter (TizenWebPlayer):
+      //   Flutter → JS : window.applyConfig(cfg), window.hostCmd({cmd, args})
+      //   JS → Flutter : PlayerBridge.postMessage(json), LogChannel.postMessage(text)
+      var player = null;
+      var domReady = false;
+      var cachedCfg = null;
+      var _rafId = null;
+      var _lastT = -1;
+      var _pingId = null;
+
+      function postBridge(obj) {
+        try {
+          PlayerBridge && PlayerBridge.postMessage(JSON.stringify(obj));
+        } catch (_) {}
+      }
+
+      function hostLog() {
+        try {
+          LogChannel &&
+            LogChannel.postMessage([].slice.call(arguments).join(" "));
+        } catch (_) {}
+      }
+
+      function hostErr() {
+        var args = [].slice.call(arguments);
+        args.unshift("ERROR:");
+        try {
+          LogChannel && LogChannel.postMessage(args.join(" "));
+        } catch (_) {}
+      }
+
+      function prettyErr(tag, err) {
+        try {
+          hostErr(
+            tag,
+            JSON.stringify({
+              code: err && err.code,
+              name: err && err.name,
+              message: err && err.message,
+              data: err && err.data,
+            })
+          );
+        } catch (_) {
+          hostErr(tag, String(err));
+        }
+      }
+
+      window.onerror = function (message, source, line) {
+        hostErr("window.onerror", message, source + ":" + line);
+      };
+
+      // ---------- player state → Flutter ----------
+
+      function computeIsLive(duration) {
+        var live = false;
+        try {
+          live = (player.isLive && player.isLive()) === true;
+        } catch (_) {}
+        // A live HLS stream reports an infinite/absent duration.
+        if (!live) live = !(isFinite(duration) && duration > 0);
+        return live;
+      }
+
+      function snapshot() {
+        var time = 0;
+        var duration = 0;
+        var playing = false;
+        try {
+          time = player.getCurrentTime ? player.getCurrentTime() : 0;
+        } catch (_) {}
+        try {
+          duration = player.getDuration ? player.getDuration() : 0;
+        } catch (_) {}
+        try {
+          playing = player.isPlaying ? !!player.isPlaying() : false;
+        } catch (_) {}
+        return {
+          type: "time",
+          time: time,
+          duration: duration,
+          playing: playing,
+          isLive: computeIsLive(duration),
+        };
+      }
+
+      // Two clocks on purpose: the rAF ticker gives the scrubber a smooth
+      // position while playing, and the 1 s interval keeps Flutter in sync even
+      // when rAF is throttled (Tizen throttles it on some models).
+      function startTicker() {
+        if (_rafId) return;
+        var step = function () {
+          if (player) {
+            var state = snapshot();
+            if (Math.abs(state.time - _lastT) > 0.2) {
+              postBridge(state);
+              _lastT = state.time;
+            }
+          }
+          _rafId = window.requestAnimationFrame(step);
+        };
+        _rafId = window.requestAnimationFrame(step);
+      }
+
+      function stopTicker() {
+        if (_rafId) {
+          cancelAnimationFrame(_rafId);
+          _rafId = null;
+        }
+      }
+
+      function startTimePing() {
+        if (_pingId) return;
+        _pingId = setInterval(function () {
+          if (player) postBridge(snapshot());
+        }, 1000);
+      }
+
+      function stopTimePing() {
+        if (_pingId) {
+          clearInterval(_pingId);
+          _pingId = null;
+        }
+      }
+
+      // ---------- setup ----------
+
+      function ensureFocus() {
+        try {
+          document.body.setAttribute("tabindex", "0");
+          document.body.focus();
+        } catch (_) {}
+      }
+
+      // Safety net only: Flutter's KeyboardListener owns the D-pad. These fire
+      // solely if the WebView takes key focus on some Tizen model. Back must
+      // NOT exit the app here — it posts to Flutter, which pops the route.
+      function setupControllerEvents() {
+        document.addEventListener("keydown", function (e) {
+          switch (e.keyCode) {
+            case 13: // Enter / Select
+              if (player) togglePlay(true);
+              break;
+            case 37: // Left
+              if (player) seekRel(-10);
+              break;
+            case 39: // Right
+              if (player) seekRel(10);
+              break;
+            case 10009: // Tizen RETURN
+              postBridge({ type: "event", name: "Back" });
+              break;
+          }
+        });
+      }
+
+      function registerModules() {
+        var P = bitmovin.player.core.Player;
+        P.addModule(window.bitmovin.player.polyfill.default);
+        P.addModule(window.bitmovin.player["engine-bitmovin"].default);
+        P.addModule(window.bitmovin.player["engine-native"].default);
+        P.addModule(window.bitmovin.player["container-mp4"].default);
+        P.addModule(window.bitmovin.player["container-ts"].default);
+        P.addModule(window.bitmovin.player.mserenderer.default);
+        P.addModule(window.bitmovin.player.xml.default);
+        P.addModule(window.bitmovin.player.hls.default);
+        P.addModule(window.bitmovin.player.dash.default);
+        P.addModule(window.bitmovin.player.abr.default);
+        P.addModule(window.bitmovin.player.style.default);
+        P.addModule(window.bitmovin.player.drm.default);
+        P.addModule(window.bitmovin.player.tizen.default);
+      }
+
+      function wireEvents() {
+        var E = bitmovin.player.core.PlayerEvent;
+
+        player.on(E.SourceLoaded, function () {
+          var duration = NaN;
+          try {
+            duration = player.getDuration ? player.getDuration() : NaN;
+          } catch (_) {}
+          var live = computeIsLive(duration);
+          postBridge({ type: "event", name: "SourceLoaded" });
+          postBridge({ type: "duration", value: duration, isLive: live });
+          postBridge({
+            type: "state",
+            playing: false,
+            isLive: live,
+            duration: duration,
+          });
+          startTimePing();
+        });
+
+        player.on(E.TimeChanged, function () {
+          postBridge(snapshot());
+        });
+
+        player.on(E.Play, function () {
+          postBridge({ type: "event", name: "Play" });
+        });
+
+        player.on(E.Playing, function () {
+          postBridge({ type: "event", name: "Playing" });
+          startTicker();
+          startTimePing();
+        });
+
+        player.on(E.Paused, function () {
+          postBridge({ type: "event", name: "Paused" });
+          stopTicker();
+          stopTimePing();
+        });
+
+        player.on(E.Error, function (e) {
+          prettyErr("PlayerError", e);
+        });
+
+        player.on(E.SourceError, function (e) {
+          prettyErr("SourceError", e);
+        });
+      }
+
+      function initPlayer(cfg) {
+        try {
+          registerModules();
+
+          var conf = new bitmovin.player.core.util.PlayerConfigBuilder(
+            (cfg && cfg.licenseKey) || ""
+          )
+            .optimizeForPlatform({ appId: (cfg && cfg.appId) || "" })
+            .build();
+
+          // Our own D-pad controls are drawn by Flutter on top of the WebView.
+          conf.ui = false;
+          conf.playback = {
+            autoplay: true,
+            muted: false,
+            preferredTech: [
+              { player: "html5", streaming: "hls" },
+              { player: "native", streaming: "hls" },
+            ],
+          };
+
+          player = new bitmovin.player.core.Player(
+            document.getElementById("player"),
+            conf
+          );
+
+          wireEvents();
+          setupControllerEvents();
+
+          if (cfg && cfg.url) startLoad(cfg);
+        } catch (e) {
+          prettyErr("initPlayer", e);
+        }
+      }
+
+      function buildSource(url, type, cfg) {
+        var source = {
+          title: (cfg && cfg.title) || "",
+          description: (cfg && cfg.description) || "",
+        };
+        if (type === "hls") source.hls = url;
+        else if (type === "dash") source.dash = url;
+        else source.progressive = url;
+        return source;
+      }
+
+      function startLoad(cfg) {
+        if (!player) return;
+        var url = cfg.url || "";
+        var type = (cfg.type || "hls").toLowerCase();
+        if (!url) {
+          hostErr("startLoad", "no url");
+          return;
+        }
+
+        player
+          .load(buildSource(url, type, cfg))
+          .then(function () {
+            startTimePing();
+            try {
+              player.setMuted(false);
+            } catch (_) {}
+            try {
+              player.play();
+            } catch (e) {
+              prettyErr("autoplay", e);
+            }
+          })
+          .catch(function (err) {
+            prettyErr("load", err);
+            // Mirrors the native players: fall back to the secondary URL.
+            if (cfg.url2) {
+              try {
+                player.load(buildSource(cfg.url2, type, cfg));
+              } catch (e) {
+                prettyErr("fallbackLoad", e);
+              }
+            }
+          });
+      }
+
+      window.applyConfig = function (cfg) {
+        if (!cfg) return;
+        cachedCfg = cfg;
+        if (!domReady) return;
+        if (!player) initPlayer(cachedCfg);
+        else startLoad(cachedCfg);
+      };
+
+      // ---------- commands from Flutter ----------
+
+      function togglePlay(unmute) {
+        if (!player) return;
+        try {
+          if (unmute) player.setMuted(false);
+          if (player.isPlaying && player.isPlaying()) player.pause();
+          else player.play();
+        } catch (e) {
+          prettyErr("togglePlay", e);
+        }
+      }
+
+      function seekRel(delta) {
+        if (!player) return;
+        try {
+          var time = player.getCurrentTime ? player.getCurrentTime() : 0;
+          var duration = player.getDuration ? player.getDuration() : 0;
+          var target = Math.max(0, time + (delta || 0));
+          if (isFinite(duration) && duration > 0) {
+            target = Math.min(target, duration);
+          }
+          player.seek(target);
+        } catch (e) {
+          prettyErr("seekRel", e);
+        }
+      }
+
+      function seekAbs(time) {
+        if (!player) return;
+        try {
+          player.seek(Math.max(0, time || 0));
+        } catch (e) {
+          prettyErr("seekAbs", e);
+        }
+      }
+
+      function destroy() {
+        stopTicker();
+        stopTimePing();
+        if (!player) return;
+        try {
+          player.destroy();
+        } catch (e) {
+          prettyErr("destroy", e);
+        }
+        player = null;
+      }
+
+      window.hostCmd = function (payload) {
+        try {
+          var raw = payload;
+          if (typeof payload === "string") raw = JSON.parse(payload);
+          var cmd = raw && raw.cmd;
+          var args = (raw && raw.args) || {};
+          switch (cmd) {
+            case "togglePlay":
+              togglePlay(!!args.unmute);
+              break;
+            case "play":
+              if (player) {
+                try {
+                  if (args.unmute) player.setMuted(false);
+                  player.play();
+                } catch (e) {
+                  prettyErr("play", e);
+                }
+              }
+              break;
+            case "pause":
+              if (player) {
+                try {
+                  player.pause();
+                } catch (e) {
+                  prettyErr("pause", e);
+                }
+              }
+              break;
+            case "seekRel":
+              seekRel(+args.delta || 0);
+              break;
+            case "seekAbs":
+              seekAbs(+args.time || 0);
+              break;
+            case "getDuration":
+              if (player) {
+                var duration = NaN;
+                try {
+                  duration = player.getDuration ? player.getDuration() : NaN;
+                } catch (_) {}
+                postBridge({
+                  type: "duration",
+                  value: duration,
+                  isLive: computeIsLive(duration),
+                });
+              }
+              break;
+            case "getTime":
+              if (player) postBridge(snapshot());
+              break;
+            case "destroy":
+              destroy();
+              break;
+            default:
+              hostErr("hostCmd unknown", cmd);
+          }
+        } catch (e) {
+          prettyErr("hostCmd", e);
+        }
+      };
+
+      window.onload = function () {
+        domReady = true;
+        ensureFocus();
+        if (cachedCfg) initPlayer(cachedCfg);
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden) ensureFocus();
+        });
+      };
+    </script>
+  </body>
+</html>

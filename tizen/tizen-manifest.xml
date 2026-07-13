@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="tv.onegolf.tv" version="1.0.0" api-version="6.0" xmlns="http://tizen.org/ns/packages">
+    <profile name="common"/>
+    <privileges>
+        <privilege>http://tizen.org/privilege/internet</privilege>
+        <privilege>http://tizen.org/privilege/network.get</privilege>
+        <!-- Temp file the WebView player page is written to, plus the image cache. -->
+        <privilege>http://tizen.org/privilege/mediastorage</privilege>
+        <privilege>http://tizen.org/privilege/externalstorage</privilege>
+        <!-- Playback and remote control. -->
+        <privilege>http://tizen.org/privilege/tv.display</privilege>
+        <privilege>http://tizen.org/privilege/tv.window</privilege>
+        <privilege>http://tizen.org/privilege/tv.inputdevice</privilege>
+        <privilege>http://tizen.org/privilege/tv.audio</privilege>
+        <privilege>http://tizen.org/privilege/drmplay</privilege>
+        <!-- wakelock_plus: keep the screen awake while a stream plays. -->
+        <privilege>http://tizen.org/privilege/display</privilege>
+    </privileges>
+    <ui-application appid="tv.onegolf.tv" exec="Runner.dll" type="dotnet" multiple="false" nodisplay="false" taskmanage="true">
+        <label>1Golf</label>
+        <icon>ic_launcher.png</icon>
+        <metadata key="http://tizen.org/metadata/prefer_dotnet_aot" value="true"/>
+        <metadata key="http://tizen.org/metadata/prefer_nuget_cache" value="true"/>
+    </ui-application>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+</manifest>

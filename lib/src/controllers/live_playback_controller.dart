@@ -1,4 +1,5 @@
 import 'package:bitmovin_player/bitmovin_player.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -15,8 +16,10 @@ enum LiveViewOwner { inline, fullscreen }
 /// Owns the long-lived player behind the home live preview tile so the same
 /// stream can be handed off to the full-screen player and back with no reload.
 ///
-/// Picks the same engine as [AdaptivePlayer]: native Bitmovin on Android
-/// SDK ≥ 26, `video_player` otherwise. The player is created once per channel
+/// Uses native Bitmovin on Android SDK ≥ 26 and `video_player` everywhere else
+/// — including Tizen, whose full-screen player is a WebView the inline tile
+/// cannot hand off to (see [suspendForFullscreen]).
+/// The player is created once per channel
 /// and kept alive across the full-screen route (which attaches to it via
 /// `externalPlayer`/`externalController` rather than spinning up its own), so
 /// there is no rebuffer crossing between inline and full-screen. It is disposed
@@ -29,9 +32,9 @@ class LivePlaybackController extends GetxController
   Player? bitmovinPlayer;
   VideoPlayerController? videoController;
 
-  /// Cached device engine choice (Bitmovin vs. `video_player`) — resolved once.
-  bool? _useBitmovin;
-  bool get usesBitmovin => _useBitmovin ?? false;
+  /// Cached device engine choice — resolved once.
+  PlayerEngine? _engine;
+  bool get usesBitmovin => _engine == PlayerEngine.bitmovin;
 
   String url = '';
   String? url2;
@@ -87,7 +90,7 @@ class LivePlaybackController extends GetxController
     url2 = resolvedUrl2;
     title = channel.title ?? '';
 
-    _useBitmovin ??= await AdaptivePlayer.useBitmovin();
+    _engine ??= await AdaptivePlayer.resolveEngine();
     if (_channelId != channel.objectId) return;
 
     if (usesBitmovin) {
@@ -185,7 +188,7 @@ class LivePlaybackController extends GetxController
     videoController = controller;
     controller.addListener(_onVideoTick);
     _applyInlineMute();
-    await controller.play();
+    await _play();
     status.value = LivePlaybackStatus.playing;
   }
 
@@ -238,6 +241,26 @@ class LivePlaybackController extends GetxController
     await WidgetsBinding.instance.endOfFrame;
   }
 
+  /// Tizen's full-screen player is a WebView running the Bitmovin Web SDK — a
+  /// separate engine the inline player cannot be handed off to. So instead of
+  /// [enterFullscreen]'s hand-over, the inline player releases the TV's decoder
+  /// entirely before the full-screen route mounts, and [resumeInline] starts it
+  /// again on return.
+  Future<void> suspendForFullscreen() async {
+    viewOwner.value = LiveViewOwner.fullscreen;
+    await _teardown();
+    status.value = LivePlaybackStatus.idle;
+    // Let the tile swap its video view for the thumbnail before the full-screen
+    // player claims the decoder.
+    await WidgetsBinding.instance.endOfFrame;
+  }
+
+  /// Restarts the inline preview after the Tizen full-screen player is closed.
+  Future<void> resumeInline(OBChannel channel) async {
+    viewOwner.value = LiveViewOwner.inline;
+    await ensureStarted(channel);
+  }
+
   /// Called from the full-screen player's `dispose` (after its view is torn
   /// down), so the inline view can safely re-attach. Re-binds Bitmovin
   /// listeners first — the full-screen player overwrote the single-slot
@@ -276,11 +299,25 @@ class LivePlaybackController extends GetxController
     }
   }
 
-  void _play() {
+  /// Starts playback, tolerating Tizen's missing playback-rate support.
+  ///
+  /// `VideoPlayerController.play()` starts the stream and *then* pushes the
+  /// playback speed, which `video_player_tizen` rejects on a live stream with
+  /// `PlatformException(player_set_playback_rate failed, Function not
+  /// implemented)` — note the code, not the message, carries the operation. The
+  /// video is already playing by the time it throws, so the failure is
+  /// swallowed: letting it escape would abort `_startVideoPlayer` and leave the
+  /// inline tile black.
+  Future<void> _play() async {
     if (usesBitmovin) {
-      bitmovinPlayer?.play();
-    } else {
-      videoController?.play();
+      await bitmovinPlayer?.play();
+      return;
+    }
+    try {
+      await videoController?.play();
+    } on PlatformException catch (e) {
+      if (e.code.contains('player_set_playback_rate')) return;
+      rethrow;
     }
   }
 

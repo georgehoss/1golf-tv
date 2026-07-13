@@ -13,6 +13,7 @@ import '../../models/items_list.dart';
 import '../../pages/leagues/league_detail_page.dart';
 import '../../pages/live/live_preview_page.dart';
 import '../../utils/image_index.dart';
+import '../../utils/platform_info.dart';
 import 'card_shadow.dart';
 
 /// Resolves [channel]'s URL and pushes the full-screen live player. Shared by
@@ -468,6 +469,20 @@ class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
   /// player (covers the case where the inline preview never started).
   Future<void> _open(BuildContext context) async {
     Get.find<MainController>().selectChannel(widget.channel);
+
+    // Tizen: the full-screen player is a WebView running the Bitmovin Web SDK,
+    // a different engine than the inline `video_player` — there is nothing to
+    // hand off. Release the inline decoder first, open a fresh full-screen
+    // player, and restart the tile on return.
+    if (isTizen) {
+      await _playback.suspendForFullscreen();
+      if (!context.mounted) return;
+      await _openLiveChannel(context, widget.channel);
+      await _playback.resumeInline(widget.channel);
+      _playback.setInlineFocused(_hasFocus);
+      return;
+    }
+
     if (_playback.status.value == LivePlaybackStatus.playing) {
       await _playback.enterFullscreen();
       await Get.to(

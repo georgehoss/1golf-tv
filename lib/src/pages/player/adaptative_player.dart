@@ -3,15 +3,29 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/platform_info.dart';
 import 'bitmovin_player.dart';
 import 'fallback_player.dart';
+import 'tizen_web_player.dart';
 
-/// Picks the right player for the device. Ported from
-/// `one_baseball_android_tv` without the Tizen branch (Fase 2, deferred).
+/// Playback engine for the current device.
+enum PlayerEngine {
+  /// Native Bitmovin SDK — Android TV / Fire TV on SDK ≥ [AdaptivePlayer.cutoffSdk].
+  bitmovin,
+
+  /// `video_player` — older Fire TV Sticks (Fire OS 5/6, SDK 22/25), where the
+  /// native Bitmovin SDK is unsupported.
+  fallback,
+
+  /// Bitmovin **Web** SDK inside a WebView — Samsung Tizen, which has no native
+  /// Bitmovin SDK. See [TizenWebPlayer].
+  tizenWeb,
+}
+
+/// Picks the right player for the device.
 ///
-/// [cutoffSdk] defaults to 26 (Android 8.0): devices below that — notably
-/// older Fire TV Sticks on Fire OS 5/6 (SDK 22/25) — fall back to
-/// [FallbackVideoPlayer] (`video_player`) instead of the native Bitmovin SDK.
+/// [cutoffSdk] defaults to 26 (Android 8.0), the minimum for the native
+/// Bitmovin SDK.
 class AdaptivePlayer extends StatefulWidget {
   const AdaptivePlayer({
     super.key,
@@ -28,14 +42,15 @@ class AdaptivePlayer extends StatefulWidget {
   final String? url2;
   final int cutoffSdk;
 
-  /// Whether this device should use the native Bitmovin SDK (`true`) or the
-  /// `video_player` fallback (`false`). Non-Android is treated as Bitmovin.
-  /// Shared with `LivePlaybackController` so the home inline preview picks the
-  /// same engine as the full-screen player.
-  static Future<bool> useBitmovin({int cutoffSdk = 26}) async {
-    if (!Platform.isAndroid) return true;
+  /// Engine this device will use. Shared with `LivePlaybackController` so the
+  /// home inline preview and the full-screen player agree.
+  static Future<PlayerEngine> resolveEngine({int cutoffSdk = 26}) async {
+    if (isTizen) return PlayerEngine.tizenWeb;
+    if (!Platform.isAndroid) return PlayerEngine.bitmovin;
     final info = await DeviceInfoPlugin().androidInfo;
-    return info.version.sdkInt >= cutoffSdk;
+    return info.version.sdkInt >= cutoffSdk
+        ? PlayerEngine.bitmovin
+        : PlayerEngine.fallback;
   }
 
   @override
@@ -43,43 +58,38 @@ class AdaptivePlayer extends StatefulWidget {
 }
 
 class _AdaptivePlayerState extends State<AdaptivePlayer> {
-  int? _sdkInt;
+  PlayerEngine? _engine;
 
   @override
   void initState() {
     super.initState();
-    _detectPlatform();
-  }
-
-  Future<void> _detectPlatform() async {
-    if (!Platform.isAndroid) {
-      setState(() => _sdkInt = 33);
-      return;
-    }
-    final info = await DeviceInfoPlugin().androidInfo;
-    setState(() => _sdkInt = info.version.sdkInt);
+    AdaptivePlayer.resolveEngine(cutoffSdk: widget.cutoffSdk).then((engine) {
+      if (mounted) setState(() => _engine = engine);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_sdkInt == null) {
-      return const ColoredBox(color: Colors.black);
-    }
-
-    if (_sdkInt! < widget.cutoffSdk) {
-      return FallbackVideoPlayer(
+    return switch (_engine) {
+      null => const ColoredBox(color: Colors.black),
+      PlayerEngine.tizenWeb => TizenWebPlayer(
         url: widget.url,
         url2: widget.url2,
         title: widget.title,
         isHLS: widget.isHLS,
-      );
-    } else {
-      return BitmovinPlayer(
+      ),
+      PlayerEngine.fallback => FallbackVideoPlayer(
         url: widget.url,
         url2: widget.url2,
         title: widget.title,
         isHLS: widget.isHLS,
-      );
-    }
+      ),
+      PlayerEngine.bitmovin => BitmovinPlayer(
+        url: widget.url,
+        url2: widget.url2,
+        title: widget.title,
+        isHLS: widget.isHLS,
+      ),
+    };
   }
 }
