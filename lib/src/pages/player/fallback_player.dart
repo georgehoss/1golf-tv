@@ -535,101 +535,107 @@ class _FallbackVideoPlayerState extends State<FallbackVideoPlayer> {
 
   Widget _buildControls(BuildContext context) {
     return Positioned.fill(
-      child: Column(
-        children: [
-          SafeArea(
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        shadows: [Shadow(color: Colors.black, blurRadius: 2)],
+      // Firestick overscan crops screen edges; inset the controls overlay so
+      // the title/time/slider don't sit flush against the border. The video
+      // itself stays full-bleed (no black frame).
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          children: [
+            SafeArea(
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        widget.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          shadows: [Shadow(color: Colors.black, blurRadius: 2)],
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                ],
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            if (_showControls && !_controller.value.isPlaying)
+              Center(child: Image.asset(ImageIndex.logo, width: 50)),
+            const Expanded(child: SizedBox()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 30),
+                if (widget.isHLS)
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: const Color(0xFFFBB03B)),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: const Text(
+                      'EN VIVO',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      '${_fmt(_scrubValue ?? _position)} / ${_fmt(_duration)}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                Expanded(
+                  child: Slider(
+                    inactiveColor: Colors.grey,
+                    thumbColor: _isSeeking || _scrubValue != null
+                        ? Colors.white
+                        : const Color(0xFFFBB03B),
+                    value: _duration > 0
+                        ? (_scrubValue ?? _position).clamp(0, _duration)
+                        : 0,
+                    max: _duration > 0 ? _duration : 1,
+                    onChangeStart: (_) {
+                      _isSeeking = true;
+                      _forceShowControls = true;
+                      _scrubValue ??= _position;
+                      setState(() {});
+                      _cancelAutoHide();
+                    },
+                    onChanged: (v) {
+                      _scrubValue = v;
+                      setState(() {});
+                    },
+                    onChangeEnd: (_) async {
+                      if (_scrubValue != null) {
+                        final v = _scrubValue!.clamp(0, _duration).toDouble();
+                        await _seek(v);
+                        _scrubValue = null;
+                      }
+                      _isSeeking = false;
+                      setState(() {});
+                      _startAutoHide(seconds: 8);
+                    },
+                  ),
                 ),
+                // TV-safe trailing margin: the slider would otherwise touch
+                // the right screen edge, at risk of overscan cropping.
+                const SizedBox(width: 24),
               ],
             ),
-          ),
-          const Expanded(child: SizedBox()),
-          if (_showControls && !_controller.value.isPlaying)
-            Center(child: Image.asset(ImageIndex.logo, width: 50)),
-          const Expanded(child: SizedBox()),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(width: 30),
-              if (widget.isHLS)
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFFBB03B)),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: const Text(
-                    'EN VIVO',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                    ),
-                  ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Text(
-                    '${_fmt(_scrubValue ?? _position)} / ${_fmt(_duration)}',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              Expanded(
-                child: Slider(
-                  inactiveColor: Colors.grey,
-                  thumbColor: _isSeeking || _scrubValue != null
-                      ? Colors.white
-                      : const Color(0xFFFBB03B),
-                  value: _duration > 0
-                      ? (_scrubValue ?? _position).clamp(0, _duration)
-                      : 0,
-                  max: _duration > 0 ? _duration : 1,
-                  onChangeStart: (_) {
-                    _isSeeking = true;
-                    _forceShowControls = true;
-                    _scrubValue ??= _position;
-                    setState(() {});
-                    _cancelAutoHide();
-                  },
-                  onChanged: (v) {
-                    _scrubValue = v;
-                    setState(() {});
-                  },
-                  onChangeEnd: (_) async {
-                    if (_scrubValue != null) {
-                      final v = _scrubValue!.clamp(0, _duration).toDouble();
-                      await _seek(v);
-                      _scrubValue = null;
-                    }
-                    _isSeeking = false;
-                    setState(() {});
-                    _startAutoHide(seconds: 8);
-                  },
-                ),
-              ),
-              // TV-safe trailing margin: the slider would otherwise touch
-              // the right screen edge, at risk of overscan cropping.
-              const SizedBox(width: 24),
-            ],
-          ),
-          const SizedBox(height: 20),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

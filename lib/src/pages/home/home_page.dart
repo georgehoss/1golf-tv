@@ -104,23 +104,28 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           child: Scaffold(
             key: _scaffoldKey,
             drawer: const MenuDrawer(),
-            body: Stack(
-              children: [
-                SizedBox(width: double.infinity, height: double.infinity),
-                const CardShadow(startOpacity: 0.0, endOpacity: 0.6),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SideBarWidget(
-                      currentIndex: controller.currentIndex.value,
-                      onFocusChange: () {
-                        _scaffoldKey.currentState!.openDrawer();
-                      },
-                    ),
-                    _buildContent(),
-                  ],
-                ),
-              ],
+            // Firestick overscan crops screen edges; inset content so nothing
+            // sits flush against the border.
+            body: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Stack(
+                children: [
+                  SizedBox(width: double.infinity, height: double.infinity),
+                  const CardShadow(startOpacity: 0.0, endOpacity: 0.6),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SideBarWidget(
+                        currentIndex: controller.currentIndex.value,
+                        onFocusChange: () {
+                          _scaffoldKey.currentState!.openDrawer();
+                        },
+                      ),
+                      _buildContent(),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

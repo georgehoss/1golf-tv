@@ -33,33 +33,38 @@ class _LeagueDetailPageState extends State<LeagueDetailPage> {
         if (!didPop) Get.back();
       },
       child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(ImageIndex.backgroundHome),
-                  fit: BoxFit.cover,
+        // Firestick overscan crops screen edges; inset content so nothing
+        // sits flush against the border.
+        body: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(ImageIndex.backgroundHome),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            SafeArea(
-              child: GetBuilder(
-                init: controller,
-                builder: (context) {
-                  if (controller.isLoadingLeague.isTrue &&
-                      !controller.hasLeagueDetail()) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    );
-                  }
-                  return const LeagueDetailContent();
-                },
+              SafeArea(
+                child: GetBuilder(
+                  init: controller,
+                  builder: (context) {
+                    if (controller.isLoadingLeague.isTrue &&
+                        !controller.hasLeagueDetail()) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      );
+                    }
+                    return const LeagueDetailContent();
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -106,7 +111,8 @@ class _LeagueDetailContentState extends State<LeagueDetailContent> {
       );
     }
 
-    final videoItems = league.components?.items
+    final videoItems =
+        league.components?.items
             ?.map(
               (item) => ItemsListItem(
                 objectId: item.objectId,

@@ -644,86 +644,92 @@ class _BitmovinPlayerState extends State<BitmovinPlayer>
   AspectRatio playerControls(BuildContext context) {
     return AspectRatio(
       aspectRatio: 16 / 9,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SafeArea(
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.title,
-                      style: const TextStyle(
-                        shadows: [Shadow(color: Colors.black, blurRadius: 2)],
-                        color: Colors.white,
-                        fontSize: 18,
+      // Firestick overscan crops screen edges; inset the controls overlay so
+      // the title/time/slider don't sit flush against the border. The video
+      // itself stays full-bleed (no black frame).
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SafeArea(
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        widget.title,
+                        style: const TextStyle(
+                          shadows: [Shadow(color: Colors.black, blurRadius: 2)],
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                ],
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            if (showControls)
+              Center(child: Image.asset(ImageIndex.logo, width: 50)),
+            const Expanded(child: SizedBox()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget.isHLS
+                    ? liveTag()
+                    : Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          '${_formatDuration(_scrubValue ?? currentTime)} / ${_formatDuration(duration)}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                Expanded(
+                  child: Slider(
+                    inactiveColor: Colors.grey,
+                    thumbColor: (isSeeking || _scrubValue != null)
+                        ? Colors.white
+                        : const Color(0xFFFBB03B),
+                    value: duration > 0
+                        ? (_scrubValue ?? currentTime).clamp(0, duration)
+                        : 0,
+                    max: duration > 0 ? duration : 1,
+                    onChangeStart: (_) {
+                      isSeeking = true;
+                      forceShowControls = true;
+                      _scrubValue ??= currentTime;
+                      setState(() {});
+                    },
+                    onChanged: (v) {
+                      _scrubValue = v;
+                      setState(() {});
+                    },
+                    onChangeEnd: (_) async {
+                      if (_scrubValue != null) {
+                        final v = _scrubValue!.clamp(0, duration).toDouble();
+                        _player.seek(v);
+                        _scrubValue = null;
+                      }
+                      isSeeking = false;
+                      setState(() {});
+                      _startAutoHide(seconds: 8);
+                    },
+                  ),
                 ),
+                // TV-safe trailing margin: the slider would otherwise touch
+                // the right screen edge, at risk of overscan cropping.
+                const SizedBox(width: 24),
               ],
             ),
-          ),
-          const Expanded(child: SizedBox()),
-          if (showControls)
-            Center(child: Image.asset(ImageIndex.logo, width: 50)),
-          const Expanded(child: SizedBox()),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              widget.isHLS
-                  ? liveTag()
-                  : Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        '${_formatDuration(_scrubValue ?? currentTime)} / ${_formatDuration(duration)}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-              Expanded(
-                child: Slider(
-                  inactiveColor: Colors.grey,
-                  thumbColor: (isSeeking || _scrubValue != null)
-                      ? Colors.white
-                      : const Color(0xFFFBB03B),
-                  value: duration > 0
-                      ? (_scrubValue ?? currentTime).clamp(0, duration)
-                      : 0,
-                  max: duration > 0 ? duration : 1,
-                  onChangeStart: (_) {
-                    isSeeking = true;
-                    forceShowControls = true;
-                    _scrubValue ??= currentTime;
-                    setState(() {});
-                  },
-                  onChanged: (v) {
-                    _scrubValue = v;
-                    setState(() {});
-                  },
-                  onChangeEnd: (_) async {
-                    if (_scrubValue != null) {
-                      final v = _scrubValue!.clamp(0, duration).toDouble();
-                      _player.seek(v);
-                      _scrubValue = null;
-                    }
-                    isSeeking = false;
-                    setState(() {});
-                    _startAutoHide(seconds: 8);
-                  },
-                ),
-              ),
-              // TV-safe trailing margin: the slider would otherwise touch
-              // the right screen edge, at risk of overscan cropping.
-              const SizedBox(width: 24),
-            ],
-          ),
-          const SizedBox(height: 20),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
