@@ -117,7 +117,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
       // left edge and the QR to the right with a huge hole in between.
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
@@ -201,7 +201,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
               _buildRefreshButton(),
             ],
           ),
-          const SizedBox(width: 70),
+
           Column(
             children: [
               Image.asset(ImageIndex.logo, height: 100),

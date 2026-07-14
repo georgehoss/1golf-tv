@@ -532,14 +532,18 @@ class _LiveChannelPreviewCardState extends State<_LiveChannelPreviewCard> {
           ),
         );
       }
-      return CachedNetworkImage(
-        imageUrl: widget.channel.thummb ?? '',
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-        errorWidget: (context, url, error) => ColoredBox(
-          color: const Color(0xFF0C213F),
-          child: Center(child: Image.asset(ImageIndex.logo, width: 72)),
+      // Loading/idle placeholder: the channel `thummb` is a logo, not a 16:9
+      // photo, so `contain` (over a navy backdrop) keeps it whole instead of
+      // cropping it like `cover` would. Mirrors the Apple TV hero fix.
+      return ColoredBox(
+        color: const Color(0xFF0C213F),
+        child: CachedNetworkImage(
+          imageUrl: widget.channel.thummb ?? '',
+          fit: BoxFit.contain,
+          width: double.infinity,
+          height: double.infinity,
+          errorWidget: (context, url, error) =>
+              Center(child: Image.asset(ImageIndex.logo, width: 72)),
         ),
       );
     });
