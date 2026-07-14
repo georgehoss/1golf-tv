@@ -201,7 +201,7 @@ class _QRLoginPageState extends State<QRLoginPage> {
               _buildRefreshButton(),
             ],
           ),
-
+          SizedBox(width: 120),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
