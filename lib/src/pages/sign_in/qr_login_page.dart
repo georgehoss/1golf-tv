@@ -46,11 +46,9 @@ class _QRLoginPageState extends State<QRLoginPage> {
             height: double.infinity,
             decoration: const BoxDecoration(color: Color(0xFF041E42)),
           ),
-          SizedBox(
-            width: Get.width * 0.9,
-            height: Get.height * 0.9,
-            child: Center(child: Obx(() => _buildContent())),
-          ),
+          // Center the block itself: a Stack aligns non-positioned children
+          // top-left, which pushed the whole layout off-center.
+          Center(child: Obx(() => _buildContent())),
         ],
       ),
     );
@@ -114,104 +112,102 @@ class _QRLoginPageState extends State<QRLoginPage> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+      // Both columns hug the center with a fixed gap. An Expanded here made
+      // the instructions swallow all remaining width, pinning them to the
+      // left edge and the QR to the right with a huge hole in between.
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 40, right: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Inicia sesión con tu teléfono',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                    ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Inicia sesión con tu teléfono',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+              const SizedBox(height: 15),
+              _buildStep('1', 'Abre la cámara de tu teléfono'),
+              const SizedBox(height: 10),
+              _buildStep('2', 'Escanea el código QR'),
+              const SizedBox(height: 10),
+              _buildStep('3', 'Inicia sesión en tu cuenta'),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
-                  const SizedBox(height: 15),
-                  _buildStep('1', 'Abre la cámara de tu teléfono'),
-                  const SizedBox(height: 10),
-                  _buildStep('2', 'Escanea el código QR'),
-                  const SizedBox(height: 10),
-                  _buildStep('3', 'Inicia sesión en tu cuenta'),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 12,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Código: ',
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
+                    Text(
+                      deviceAuth.userCode,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 4,
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'Código: ',
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                        ),
-                        Text(
-                          deviceAuth.userCode,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Obx(
-                    () => Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.timer_outlined,
-                          color: authController.remainingSeconds.value < 60
-                              ? Colors.orange
-                              : Colors.white70,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'El código expira en: ${authController.formattedRemainingTime}',
-                          style: TextStyle(
-                            color: authController.remainingSeconds.value < 60
-                                ? Colors.orange
-                                : Colors.white70,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  _buildRefreshButton(),
-                ],
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+              Obx(
+                () => Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.timer_outlined,
+                      color: authController.remainingSeconds.value < 60
+                          ? Colors.orange
+                          : Colors.white70,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'El código expira en: ${authController.formattedRemainingTime}',
+                      style: TextStyle(
+                        color: authController.remainingSeconds.value < 60
+                            ? Colors.orange
+                            : Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              _buildRefreshButton(),
+            ],
           ),
+          const SizedBox(width: 70),
           Column(
             children: [
               Image.asset(ImageIndex.logo, height: 100),
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.only(right: 40),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
