@@ -1,17 +1,41 @@
 # one_golf_android_tv
 
-A new Flutter project.
+1Golf Android TV App
 
-## Getting Started
+## Development
 
-This project is a starting point for a Flutter application.
+Listado de dipositivos
 
-A few resources to get you started if this is your first Flutter project:
+`flutter devices`
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Run app
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+`flutter run -d device-name`
+
+## Release
+
+## Android
+
+`flutter build appbundle`
+
+## IOs
+
+`flutter build ios`
+
+## Connection to Android TV
+
+`adb connect ANDROID_TV_IP`
+
+## Connection to tizen
+
+`sdb connect 192.168.31.217`
+
+`sdb connect 192.168.31.217:26101`
+
+`sdb devices`
+
+`flutter-tizen run`
+
+`flutter-tizen build tpk`
+
+`flutter-tizen install --release`
