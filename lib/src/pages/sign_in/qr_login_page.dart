@@ -203,6 +203,8 @@ class _QRLoginPageState extends State<QRLoginPage> {
           ),
 
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(ImageIndex.logo, height: 100),
               const SizedBox(height: 20),
