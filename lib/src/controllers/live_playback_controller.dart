@@ -82,10 +82,12 @@ class LivePlaybackController extends GetxController
         .resolveChannelUrl(channel);
     if (resolvedUrl.isEmpty || _channelId != channel.objectId) {
       if (_channelId == channel.objectId) {
+        debugPrint('🎞️ LivePlayback: empty URL for channel ${channel.title}');
         status.value = LivePlaybackStatus.failed;
       }
       return;
     }
+    debugPrint('🎞️ LivePlayback: starting ${channel.title} → $resolvedUrl');
     url = resolvedUrl;
     url2 = resolvedUrl2;
     title = channel.title ?? '';
@@ -177,6 +179,7 @@ class LivePlaybackController extends GetxController
     }
     if (!ok) {
       await controller.dispose();
+      debugPrint('🎞️ LivePlayback: both URLs failed to initialize');
       status.value = LivePlaybackStatus.failed;
       return;
     }
@@ -189,6 +192,7 @@ class LivePlaybackController extends GetxController
     controller.addListener(_onVideoTick);
     _applyInlineMute();
     await _play();
+    debugPrint('🎞️ LivePlayback: inline preview playing');
     status.value = LivePlaybackStatus.playing;
   }
 
@@ -197,7 +201,10 @@ class LivePlaybackController extends GetxController
       await c.initialize();
       await c.setLooping(false);
       return c.value.isInitialized;
-    } catch (_) {
+    } catch (e) {
+      // Surfaced in release logs too — this was silent and made release-only
+      // failures on the TV undiagnosable.
+      debugPrint('🎞️ LivePlayback: initialize failed: $e');
       return false;
     }
   }
@@ -206,6 +213,7 @@ class LivePlaybackController extends GetxController
     final value = videoController?.value;
     if (value == null) return;
     if (value.hasError && status.value != LivePlaybackStatus.failed) {
+      debugPrint('🎞️ LivePlayback: player error: ${value.errorDescription}');
       status.value = LivePlaybackStatus.failed;
     }
   }

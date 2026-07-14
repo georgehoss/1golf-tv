@@ -62,20 +62,27 @@ class MainController extends GetxController {
   /// Dailymotion enabled (`activateDm`) go through [DailyMotionProvider] to
   /// turn their `livestreamId` into a `stream_live_hls_url`; the rest play
   /// their `streamEvent` directly. Mirrors `one_golf_app`'s
-  /// `channel_player_widget` resolution logic. `streamTv` is returned as the
-  /// fallback (`url2`) for the player in both cases.
+  /// `channel_player_widget` resolution logic.
+  ///
+  /// The fallback (`url2`) on the Dailymotion path is `streamEvent`, NOT
+  /// `streamTv` like the mobile app uses: `streamTv` is an HTML player page
+  /// (`player.php?idc=...`) no video engine can load, so when the tokenized
+  /// DM stream 403s (observed in the wild — the channel kept `activateDm` on
+  /// while its DM stream was offline) the player would dead-end on it and
+  /// never try the direct HLS mirror that was still up.
   Future<(String url, String? url2)> resolveChannelUrl(
     OBChannel channel,
   ) async {
     final livestreamId = channel.livestreamId ?? '';
+    final streamEvent = channel.streamEvent ?? '';
     if (channel.activateDm == true && livestreamId.isNotEmpty) {
       final response = await DailyMotionProvider().getUrlVideo(livestreamId);
       final dmUrl = response['stream_live_hls_url'];
       if (dmUrl is String && dmUrl.isNotEmpty) {
-        return (dmUrl, channel.streamTv);
+        return (dmUrl, streamEvent.isNotEmpty ? streamEvent : channel.streamTv);
       }
     }
-    return (channel.streamEvent ?? '', channel.streamTv);
+    return (streamEvent, channel.streamTv);
   }
 
   // ─── Home data ─────────────────────────────────────────────────────────
